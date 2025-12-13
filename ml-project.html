@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Prediction ML Project - Hidaya Patel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="logo">Hidaya Patel</h1>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="resume.html">Resume</a></li>
+                <li><a href="projects.html">Projects</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="ml-project">
+        <div class="container">
+            <h1>Stock Price Prediction using Machine Learning</h1>
+            <p class="project-subtitle">DTSC691 Capstone Project | December 2024</p>
+
+            <div class="project-overview">
+                <h2>Project Overview</h2>
+                <p>
+                    This project implements a comprehensive machine learning pipeline to predict short-term stock price 
+                    movements based on historical market data. Using 10 years of Apple Inc. (AAPL) stock data, the project 
+                    demonstrates the application of technical analysis indicators and machine learning algorithms to forecast 
+                    daily price direction.
+                </p>
+            </div>
+
+            <div class="problem-section">
+                <h2>Problem Statement</h2>
+                <p>
+                    <strong>Challenge:</strong> Can machine learning identify patterns in historical stock price data to 
+                    predict short-term price movements?
+                </p>
+                <p>
+                    Financial markets are influenced by countless factors, making price forecasting difficult but valuable 
+                    for data-driven decision-making. This project explores whether patterns within historical market data—such 
+                    as price momentum, volatility, and trading volume—can be leveraged to predict short-term stock movements.
+                </p>
+            </div>
+
+            <div class="approach-section">
+                <h2>Approach & Methodology</h2>
+                
+                <h3>1. Data Collection</h3>
+                <ul>
+                    <li><strong>Source:</strong> Yahoo Finance API</li>
+                    <li><strong>Ticker:</strong> AAPL (Apple Inc.)</li>
+                    <li><strong>Period:</strong> January 2015 - December 2025 (10 years)</li>
+                    <li><strong>Samples:</strong> 2,704 trading days</li>
+                </ul>
+
+                <h3>2. Feature Engineering (28 Technical Indicators)</h3>
+                <ul>
+                    <li><strong>Trend Indicators:</strong> SMA, EMA, Price-to-SMA ratios</li>
+                    <li><strong>Momentum Indicators:</strong> MACD, RSI, Stochastic Oscillator</li>
+                    <li><strong>Volatility Measures:</strong> Bollinger Bands, ATR, Rolling Volatility</li>
+                    <li><strong>Temporal Features:</strong> Lagged returns, momentum calculations</li>
+                </ul>
+
+                <h3>3. Model Development</h3>
+                <ul>
+                    <li>Trained multiple models: Logistic Regression, Random Forest, XGBoost</li>
+                    <li>Applied time-series cross-validation to prevent data leakage</li>
+                    <li>Implemented regularization techniques to mitigate overfitting</li>
+                    <li>Selected Logistic Regression as best model (F1-Score: 0.59)</li>
+                </ul>
+
+                <h3>4. Model Evaluation</h3>
+                <ul>
+                    <li><strong>Statistical Metrics:</strong> Accuracy (51%), Precision (0.54), Recall (0.68)</li>
+                    <li><strong>Financial Backtesting:</strong> Simulated trading with transaction costs</li>
+                    <li><strong>Interpretability:</strong> SHAP analysis to identify key predictive features</li>
+                </ul>
+            </div>
+
+            <div class="results-section">
+                <h2>Results & Key Findings</h2>
+                
+                <h3>Model Performance</h3>
+                <p>
+                    The Logistic Regression model achieved 51% accuracy in predicting next-day price direction, 
+                    marginally better than random guessing (50%). While this demonstrates the inherent difficulty 
+                    of short-term stock prediction, the model successfully identified weak but consistent patterns 
+                    in technical indicators.
+                </p>
+
+                <h3>Financial Performance (Backtesting)</h3>
+                <p>
+                    When simulated in a trading strategy, the ML model underperformed a simple buy-and-hold approach:
+                </p>
+                <ul>
+                    <li>ML Strategy Return: -14.34%</li>
+                    <li>Buy & Hold Return: +58.64%</li>
+                    <li>Key Insight: Transaction costs and missed opportunities significantly impact active trading strategies</li>
+                </ul>
+
+                <h3>Feature Importance</h3>
+                <p>
+                    SHAP analysis revealed that recent price momentum (Daily_Return), volatility measures (ATR), 
+                    and short-term moving averages (SMA_10) were the most influential features in model predictions.
+                </p>
+
+                <h3>Critical Insights</h3>
+                <ul>
+                    <li>Technical indicators alone provide limited predictive edge in efficient markets</li>
+                    <li>Transaction costs significantly erode returns in active trading strategies</li>
+                    <li>Passive investing often outperforms algorithmic approaches for individual investors</li>
+                    <li>Demonstrates both the capabilities and fundamental limitations of ML in finance</li>
+                </ul>
+            </div>
+
+            <div class="deployment-section">
+                <h2>Interactive Dashboard</h2>
+                <p>
+                    The model has been deployed using Streamlit, providing an interactive interface to explore:
+                </p>
+                <ul>
+                    <li>Historical stock price trends and statistics</li>
+                    <li>Model performance metrics and comparisons</li>
+                    <li>Backtesting results with financial metrics</li>
+                    <li>Feature importance and SHAP analysis</li>
+                </ul>
+                
+                <div class="dashboard-note">
+                    <p><strong>Note:</strong> The Streamlit dashboard runs locally. To interact with the model:</p>
+                    <ol>
+                        <li>Download the project files from the submission folder</li>
+                        <li>Navigate to the project directory</li>
+                        <li>Run: <code>streamlit run app.py</code></li>
+                    </ol>
+                    <p>Alternatively, view the dashboard walkthrough in the project presentation video.</p>
+                </div>
+            </div>
+
+            <div class="tech-stack">
+                <h2>Technologies Used</h2>
+                <div class="tech-grid">
+                    <div class="tech-item">
+                        <h4>Languages & Libraries</h4>
+                        <p>Python, Pandas, NumPy, Scikit-learn, XGBoost</p>
+                    </div>
+                    <div class="tech-item">
+                        <h4>Visualization</h4>
+                        <p>Matplotlib, Seaborn, Plotly, Streamlit</p>
+                    </div>
+                    <div class="tech-item">
+                        <h4>Tools & Platforms</h4>
+                        <p>Jupyter Notebook, Google Colab, Git/GitHub</p>
+                    </div>
+                    <div class="tech-item">
+                        <h4>Specialized</h4>
+                        <p>SHAP (interpretability), yfinance (data), TA-Lib (indicators)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="conclusions">
+                <h2>Conclusions & Future Work</h2>
+                <p>
+                    This project successfully demonstrates an end-to-end machine learning pipeline while providing 
+                    realistic insights into the challenges of financial forecasting. The honest evaluation of both 
+                    capabilities and limitations represents a critical contribution to understanding algorithmic 
+                    trading feasibility.
+                </p>
+                
+                <h3>Future Enhancements:</h3>
+                <ul>
+                    <li>Incorporate fundamental analysis (P/E ratios, earnings reports)</li>
+                    <li>Add sentiment analysis from news and social media</li>
+                    <li>Explore deep learning architectures (LSTMs, Transformers)</li>
+                    <li>Implement portfolio optimization strategies</li>
+                    <li>Test on multiple stocks for diversification</li>
+                </ul>
+            </div>
+
+            <div class="cta-section">
+                <a href="projects.html" class="btn-secondary">← Back to Projects</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Hidaya Patel. All rights reserved.</p>
+    </footer>
+</body>
+</html>
