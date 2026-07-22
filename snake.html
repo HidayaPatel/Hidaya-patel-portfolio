@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game - Hidaya Patel</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .game-page {
+            background-color: white;
+            padding: 60px 20px;
+            min-height: 80vh;
+            text-align: center;
+        }
+
+        .game-page h1 {
+            color: #2E86AB;
+            margin-bottom: 0.5rem;
+        }
+
+        .game-page .page-subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .game-wrapper {
+            display: inline-block;
+            position: relative;
+        }
+
+        #gameCanvas {
+            border: 4px solid #2E86AB;
+            border-radius: 8px;
+            background-color: #1a1a2e;
+            display: block;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 400px;
+            margin: 0 auto 1rem auto;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .score-label {
+            color: #2E86AB;
+        }
+
+        .high-score-label {
+            color: #A23B72;
+        }
+
+        .game-controls {
+            margin-top: 1.5rem;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .game-controls p {
+            margin: 0.3rem 0;
+        }
+
+        #startBtn {
+            display: inline-block;
+            background-color: #2E86AB;
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        #startBtn:hover {
+            background-color: #256A8A;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 26, 46, 0.88);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .overlay h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #2E86AB;
+        }
+
+        .overlay .final-score {
+            font-size: 1.2rem;
+            color: #A23B72;
+            margin-bottom: 1rem;
+        }
+
+        .overlay button {
+            background-color: #A23B72;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.8rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .overlay button:hover {
+            background-color: #8B3060;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="logo">Hidaya Patel</h1>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="resume.html">Resume</a></li>
+                <li><a href="projects.html" class="active">Projects</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="game-page">
+        <div class="container">
+            <h1>Snake Game</h1>
+            <p class="page-subtitle">A classic Snake game built with HTML5 Canvas & JavaScript</p>
+
+            <div class="game-info">
+                <span class="score-label">Score: <span id="score">0</span></span>
+                <span class="high-score-label">Best: <span id="highScore">0</span></span>
+            </div>
+
+            <div class="game-wrapper">
+                <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+                <!-- Start Overlay -->
+                <div class="overlay" id="startOverlay">
+                    <h2>Snake Game</h2>
+                    <p style="margin-bottom: 1.2rem; color: #ccc;">Use arrow keys or WASD to move</p>
+                    <button onclick="startGame()">Start Game</button>
+                </div>
+
+                <!-- Game Over Overlay -->
+                <div class="overlay hidden" id="gameOverOverlay">
+                    <h2>Game Over!</h2>
+                    <p class="final-score">Score: <span id="finalScore">0</span></p>
+                    <button onclick="startGame()">Play Again</button>
+                </div>
+            </div>
+
+            <div class="game-controls">
+                <p>Arrow Keys or WASD to move &nbsp;|&nbsp; Eat the <span style="color:#A23B72;">red food</span> to grow</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Hidaya Patel. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const GRID = 20;
+        const COLS = canvas.width / GRID;
+        const ROWS = canvas.height / GRID;
+
+        let snake, direction, nextDirection, food, score, highScore, gameLoop, gameRunning;
+
+        highScore = 0;
+
+        function startGame() {
+            snake = [{ x: 10, y: 10 }];
+            direction = { x: 1, y: 0 };
+            nextDirection = { x: 1, y: 0 };
+            score = 0;
+            gameRunning = true;
+
+            document.getElementById('score').textContent = 0;
+            document.getElementById('startOverlay').classList.add('hidden');
+            document.getElementById('gameOverOverlay').classList.add('hidden');
+
+            placeFood();
+            clearInterval(gameLoop);
+            gameLoop = setInterval(update, 120);
+        }
+
+        function placeFood() {
+            let pos;
+            do {
+                pos = {
+                    x: Math.floor(Math.random() * COLS),
+                    y: Math.floor(Math.random() * ROWS)
+                };
+            } while (snake.some(s => s.x === pos.x && s.y === pos.y));
+            food = pos;
+        }
+
+        function update() {
+            direction = nextDirection;
+
+            const head = {
+                x: snake[0].x + direction.x,
+                y: snake[0].y + direction.y
+            };
+
+            // Wall collision
+            if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) {
+                endGame();
+                return;
+            }
+
+            // Self collision
+            if (snake.some(s => s.x === head.x && s.y === head.y)) {
+                endGame();
+                return;
+            }
+
+            snake.unshift(head);
+
+            if (head.x === food.x && head.y === food.y) {
+                score++;
+                document.getElementById('score').textContent = score;
+                if (score > highScore) {
+                    highScore = score;
+                    document.getElementById('highScore').textContent = highScore;
+                }
+                placeFood();
+            } else {
+                snake.pop();
+            }
+
+            draw();
+        }
+
+        function draw() {
+            // Background
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Grid dots
+            ctx.fillStyle = 'rgba(255,255,255,0.04)';
+            for (let x = 0; x < COLS; x++) {
+                for (let y = 0; y < ROWS; y++) {
+                    ctx.fillRect(x * GRID + GRID / 2 - 1, y * GRID + GRID / 2 - 1, 2, 2);
+                }
+            }
+
+            // Food
+            ctx.fillStyle = '#A23B72';
+            ctx.shadowColor = '#A23B72';
+            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            ctx.arc(
+                food.x * GRID + GRID / 2,
+                food.y * GRID + GRID / 2,
+                GRID / 2 - 2, 0, Math.PI * 2
+            );
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // Snake
+            snake.forEach((seg, i) => {
+                const ratio = 1 - (i / snake.length) * 0.5;
+                ctx.fillStyle = i === 0
+                    ? '#2E86AB'
+                    : `rgba(46, 134, 171, ${ratio})`;
+                ctx.shadowColor = i === 0 ? '#2E86AB' : 'transparent';
+                ctx.shadowBlur = i === 0 ? 8 : 0;
+
+                const padding = i === 0 ? 1 : 2;
+                ctx.beginPath();
+                ctx.roundRect(
+                    seg.x * GRID + padding,
+                    seg.y * GRID + padding,
+                    GRID - padding * 2,
+                    GRID - padding * 2,
+                    i === 0 ? 4 : 3
+                );
+                ctx.fill();
+            });
+
+            ctx.shadowBlur = 0;
+        }
+
+        function endGame() {
+            clearInterval(gameLoop);
+            gameRunning = false;
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('gameOverOverlay').classList.remove('hidden');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (!gameRunning) return;
+            switch (e.key) {
+                case 'ArrowUp':    case 'w': case 'W':
+                    if (direction.y !== 1)  nextDirection = { x: 0, y: -1 }; break;
+                case 'ArrowDown':  case 's': case 'S':
+                    if (direction.y !== -1) nextDirection = { x: 0, y: 1 };  break;
+                case 'ArrowLeft':  case 'a': case 'A':
+                    if (direction.x !== 1)  nextDirection = { x: -1, y: 0 }; break;
+                case 'ArrowRight': case 'd': case 'D':
+                    if (direction.x !== -1) nextDirection = { x: 1, y: 0 };  break;
+            }
+            if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
+                e.preventDefault();
+            }
+        });
+
+        // Draw initial state
+        ctx.fillStyle = '#1a1a2e';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    </script>
+</body>
+</html>
