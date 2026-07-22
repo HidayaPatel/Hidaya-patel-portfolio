@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>K-Means Clustering &mdash; COVID-19 Severity in Ontario &mdash; Hidaya Patel</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { background-color: #f0f5f1; color: #222; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; }
+
+    /* Hero */
+    .project-hero {
+      background: linear-gradient(135deg, #1a2f1a 0%, #0d4a2a 100%);
+      color: #fff;
+      padding: 70px 24px 60px;
+      text-align: center;
+    }
+    .project-hero .back-link {
+      display: inline-block;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 0.9rem;
+      margin-bottom: 28px;
+      border: 1px solid rgba(255,255,255,0.35);
+      padding: 6px 16px;
+      border-radius: 20px;
+      transition: background 0.2s;
+    }
+    .project-hero .back-link:hover { background: rgba(255,255,255,0.15); }
+    .project-hero h1 {
+      font-size: clamp(1.6rem, 4vw, 2.7rem);
+      font-weight: 800;
+      margin-bottom: 14px;
+      line-height: 1.2;
+    }
+    .project-hero .hero-subtitle {
+      font-size: 1.05rem;
+      opacity: 0.85;
+      letter-spacing: 0.5px;
+    }
+
+    /* Content wrapper */
+    .project-content {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 52px 24px 72px;
+    }
+
+    .project-content h2 {
+      color: #0d4a2a;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-top: 48px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #0d4a2a;
+    }
+
+    .project-content p {
+      color: #444;
+      line-height: 1.8;
+      margin-bottom: 16px;
+      font-size: 1rem;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 16px;
+    }
+    .feature-list li {
+      padding: 10px 0 10px 28px;
+      border-bottom: 1px solid #d8ead0;
+      color: #333;
+      font-size: 0.98rem;
+      line-height: 1.6;
+      position: relative;
+    }
+    .feature-list li:last-child { border-bottom: none; }
+    .feature-list li::before {
+      content: "&#9656;";
+      position: absolute;
+      left: 0;
+      color: #2E86AB;
+      font-size: 1rem;
+    }
+
+    .tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .tech-tag-item {
+      background: #0d4a2a;
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.87rem;
+      font-weight: 600;
+    }
+
+    .results-block {
+      background: #fff;
+      border-left: 4px solid #0d4a2a;
+      border-radius: 6px;
+      padding: 20px 24px;
+      margin: 16px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .results-block p { margin: 0; }
+
+    .cta-section {
+      margin-top: 56px;
+      text-align: center;
+      border-top: 1px solid #c8dfc0;
+      padding-top: 40px;
+    }
+    .cta-section p { color: #666; margin-bottom: 24px; }
+    .btn-github {
+      display: inline-block;
+      background: #2E86AB;
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: background 0.2s, transform 0.2s;
+      box-shadow: 0 3px 16px rgba(46,134,171,0.3);
+    }
+    .btn-github:hover { background: #256a8a; transform: translateY(-2px); }
+
+    footer {
+      background: #1a1a2e;
+      color: #5a6888;
+      text-align: center;
+      padding: 24px;
+      font-size: 0.88rem;
+    }
+    footer a { color: #2E86AB; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="logo">Hidaya Patel</div>
+    <ul class="nav-menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="resume.html">Resume</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="project-hero">
+  <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+  <h1>K-Means Clustering &mdash; COVID-19 Severity in Ontario</h1>
+  <p class="hero-subtitle">Unsupervised Learning &nbsp;&middot;&nbsp; Public Health Analytics</p>
+</div>
+
+<div class="project-content">
+
+  <h2>Overview</h2>
+  <p>
+    This project applies unsupervised machine learning to categorize the severity of COVID-19 outbreaks
+    across Ontario's public health regions. By combining K-Means and Hierarchical clustering techniques,
+    the analysis reveals natural groupings of regions based on case counts, hospitalization rates, fatality
+    rates, and vaccination coverage &mdash; producing a data-driven severity classification without any
+    predefined labels.
+  </p>
+  <p>
+    The findings offer practical value for public health decision-makers: understanding which regions cluster
+    together by severity profile enables more targeted resource allocation, vaccination campaign prioritization,
+    and policy responses. The project includes comprehensive visual cluster analysis to make findings accessible
+    to non-technical stakeholders.
+  </p>
+
+  <h2>Key Features</h2>
+  <ul class="feature-list">
+    <li><strong>K-Means and Hierarchical Clustering</strong> &mdash; Both methods applied and compared, with the optimal K selected via the Elbow Method and Silhouette Score analysis.</li>
+    <li><strong>Geographic Severity Mapping</strong> &mdash; Cluster labels mapped back to Ontario's public health unit boundaries to reveal spatial patterns in COVID-19 severity.</li>
+    <li><strong>Resource Allocation Insights</strong> &mdash; Cluster profiles translated into actionable recommendations for healthcare capacity planning and vaccine distribution.</li>
+    <li><strong>Visual Cluster Analysis</strong> &mdash; PCA-reduced scatter plots, dendrograms, heatmaps, and choropleth maps built with Seaborn and Matplotlib for intuitive interpretation.</li>
+    <li><strong>Feature Engineering</strong> &mdash; Derived severity composite scores from raw epidemiological data, with standardization to prevent scale bias in clustering.</li>
+  </ul>
+
+  <h2>Tech Stack</h2>
+  <div class="tech-tags">
+    <span class="tech-tag-item">Python</span>
+    <span class="tech-tag-item">K-Means</span>
+    <span class="tech-tag-item">Hierarchical Clustering</span>
+    <span class="tech-tag-item">Pandas</span>
+    <span class="tech-tag-item">Seaborn</span>
+    <span class="tech-tag-item">Scikit-learn</span>
+    <span class="tech-tag-item">Matplotlib</span>
+    <span class="tech-tag-item">NumPy</span>
+  </div>
+
+  <h2>Results</h2>
+  <div class="results-block">
+    <p>
+      The analysis identified three meaningful severity clusters across Ontario public health regions: low-severity,
+      moderate-severity, and high-severity clusters with distinct epidemiological profiles. The high-severity cluster
+      concentrated in the GTA and surrounding regions, consistent with population density patterns. Hierarchical
+      clustering dendrograms confirmed the natural partitioning at k=3. The geographic mapping revealed clear spatial
+      contiguity within clusters, validating the meaningfulness of the groupings and supporting targeted intervention
+      strategies for regional health authorities.
+    </p>
+  </div>
+
+  <div class="cta-section">
+    <p>Explore the full code, notebooks, and cluster visualizations on GitHub.</p>
+    <a class="btn-github"
+       href="https://github.com/Hids-ap/Using-K-means-and-Hierarchal-clustering-approach-to-weigh-severity-of-COVID-19-in-Ontario"
+       target="_blank"
+       rel="noopener noreferrer">
+      View on GitHub &rarr;
+    </a>
+  </div>
+
+</div>
+
+<footer>
+  &copy; 2025 Hidaya Patel &mdash; <a href="index.html">Back to Portfolio</a>
+</footer>
+
+</body>
+</html>
