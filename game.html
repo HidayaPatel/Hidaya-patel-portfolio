@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drive My Portfolio — Hidaya Patel</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #283618; min-height: 100vh; display: flex; flex-direction: column; }
+
+    nav {
+      background: #283618;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 62px;
+      border-bottom: 1px solid #606c38;
+      flex-shrink: 0;
+    }
+    .nav-logo {
+      color: #fefae0;
+      font-size: 1.2rem;
+      font-weight: 800;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+    }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      color: #dda15e;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #bc6c25; }
+
+    .game-header {
+      background: #283618;
+      text-align: center;
+      padding: 30px 20px 20px;
+      flex-shrink: 0;
+    }
+    .game-header h2 {
+      color: #fefae0;
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .game-header p {
+      color: #dda15e;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .canvas-section {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0 20px 20px;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    canvas {
+      display: block;
+      border-radius: 8px;
+    }
+
+    /* Bubbles */
+    .stop-bubble {
+      position: absolute;
+      z-index: 50;
+      filter: drop-shadow(0 4px 16px rgba(0,0,0,0.4));
+    }
+    .bubble-inner {
+      background: #fefae0;
+      border: 2px solid #bc6c25;
+      border-radius: 14px;
+      padding: 16px 20px;
+      width: 220px;
+      position: relative;
+    }
+    .bubble-arrow {
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+    .arrow-left .bubble-arrow {
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-right: 14px solid #bc6c25;
+      left: -14px;
+      top: 20px;
+    }
+    .arrow-right .bubble-arrow {
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-left: 14px solid #bc6c25;
+      right: -14px;
+      top: 20px;
+    }
+    .arrow-down .bubble-arrow {
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 14px solid #bc6c25;
+      bottom: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .bubble-stop {
+      color: #bc6c25;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin: 0 0 6px;
+    }
+    .bubble-title {
+      color: #283618;
+      font-size: 0.95rem;
+      font-weight: 800;
+      margin: 0 0 8px;
+      line-height: 1.3;
+    }
+    .bubble-desc {
+      color: #606c38;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      margin: 0 0 10px;
+    }
+    .bubble-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+    .bubble-tag {
+      background: #283618;
+      color: #fefae0;
+      font-size: 0.68rem;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+    .bubble-btn {
+      display: inline-block;
+      background: #bc6c25;
+      color: #fefae0;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .bubble-btn:hover { background: #a85a1e; }
+    .bubble-keep {
+      background: transparent;
+      color: #606c38;
+      border: none;
+      font-size: 0.78rem;
+      cursor: pointer;
+      margin-top: 4px;
+      text-decoration: underline;
+      display: block;
+      font-family: inherit;
+    }
+    .bubble-keep:hover { color: #283618; }
+
+    #end-screen { display: none; }
+    #end-screen.active { display: flex; }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    footer {
+      background: #283618;
+      border-top: 1px solid #606c38;
+      text-align: center;
+      padding: 22px 20px;
+      color: #606c38;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Hidaya Patel</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="resume.html">Resume</a></li>
+    </ul>
+  </nav>
+
+  <div class="game-header">
+    <h2>Drive to Discover My Projects</h2>
+    <p>&#x2191; W Accelerate &nbsp;&#xB7;&nbsp; &#x2193; S Brake &nbsp;&#xB7;&nbsp; &#x2190; &#x2192; Steer</p>
+  </div>
+
+  <div class="canvas-section">
+    <div class="canvas-wrapper" id="canvasWrapper">
+      <canvas id="roadCanvas"></canvas>
+
+      <!-- Bubble 0 -->
+      <div id="bubble-0" class="stop-bubble" style="display:none;">
+        <div class="bubble-inner">
+          <p class="bubble-stop">STOP 1</p>
+          <h3 class="bubble-title" id="b0-title"></h3>
+          <p class="bubble-desc" id="b0-desc"></p>
+          <div class="bubble-tags" id="b0-tags"></div>
+          <a class="bubble-btn" id="b0-link" href="#" target="_blank">Explore Project &#x2192;</a>
+          <button class="bubble-keep" onclick="keepDriving(0)">Keep Driving &#x2193;</button>
+        </div>
+        <div class="bubble-arrow"></div>
+      </div>
+
+      <!-- Bubble 1 -->
+      <div id="bubble-1" class="stop-bubble" style="display:none;">
+        <div class="bubble-inner">
+          <p class="bubble-stop">STOP 2</p>
+          <h3 class="bubble-title" id="b1-title"></h3>
+          <p class="bubble-desc" id="b1-desc"></p>
+          <div class="bubble-tags" id="b1-tags"></div>
+          <a class="bubble-btn" id="b1-link" href="#" target="_blank">Explore Project &#x2192;</a>
+          <button class="bubble-keep" onclick="keepDriving(1)">Keep Driving &#x2193;</button>
+        </div>
+        <div class="bubble-arrow"></div>
+      </div>
+
+      <!-- Bubble 2 -->
+      <div id="bubble-2" class="stop-bubble" style="display:none;">
+        <div class="bubble-inner">
+          <p class="bubble-stop">STOP 3</p>
+          <h3 class="bubble-title" id="b2-title"></h3>
+          <p class="bubble-desc" id="b2-desc"></p>
+          <div class="bubble-tags" id="b2-tags"></div>
+          <a class="bubble-btn" id="b2-link" href="#" target="_blank">Explore Project &#x2192;</a>
+          <button class="bubble-keep" onclick="keepDriving(2)">Keep Driving &#x2193;</button>
+        </div>
+        <div class="bubble-arrow"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- End screen -->
+  <div id="end-screen" style="position:fixed; inset:0; background:rgba(40,54,24,0.9); z-index:200; align-items:center; justify-content:center;">
+    <div style="background:#fefae0; border-radius:18px; padding:48px 52px; text-align:center; max-width:440px; width:90%; animation: popIn 0.4s cubic-bezier(0.22,1,0.36,1);">
+      <h2 style="color:#283618; font-size:2rem; margin-bottom:12px;">&#x1F389; You've seen it all!</h2>
+      <p style="color:#606c38; margin-bottom:32px; font-size:1rem; line-height:1.6;">Thanks for taking the drive through my work.<br>I'd love to connect!</p>
+      <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+        <a href="resume.html" style="background:#283618; color:#fefae0; border:none; border-radius:8px; padding:13px 26px; font-size:1rem; font-weight:700; text-decoration:none; display:inline-block;">View Resume</a>
+        <a href="mailto:hidayaaiyub@gmail.com" style="background:#bc6c25; color:#fefae0; border:none; border-radius:8px; padding:13px 26px; font-size:1rem; font-weight:700; text-decoration:none; display:inline-block;">Contact Me</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&#169; 2025 Hidaya Patel</p>
+  </footer>
+
+  <script>
+    const canvas = document.getElementById('roadCanvas');
+    const ctx = canvas.getContext('2d');
+    const CW = Math.min(window.innerWidth - 40, 760);
+    const CH = Math.min(window.innerHeight - 160, 520);
+    canvas.width = CW;
+    canvas.height = CH;
+
+    const CP = [
+      {x: CW*0.50, y: CH*0.95},
+      {x: CW*0.35, y: CH*0.82},
+      {x: CW*0.15, y: CH*0.68},
+      {x: CW*0.12, y: CH*0.52},
+      {x: CW*0.28, y: CH*0.40},
+      {x: CW*0.50, y: CH*0.34},
+      {x: CW*0.72, y: CH*0.38},
+      {x: CW*0.80, y: CH*0.24},
+      {x: CW*0.65, y: CH*0.13},
+      {x: CW*0.44, y: CH*0.05},
+    ];
+
+    function catmullRom(p0, p1, p2, p3, t) {
+      var t2 = t*t, t3 = t2*t;
+      return {
+        x: 0.5*((2*p1.x)+(-p0.x+p2.x)*t+(2*p0.x-5*p1.x+4*p2.x-p3.x)*t2+(-p0.x+3*p1.x-3*p2.x+p3.x)*t3),
+        y: 0.5*((2*p1.y)+(-p0.y+p2.y)*t+(2*p0.y-5*p1.y+4*p2.y-p3.y)*t2+(-p0.y+3*p1.y-3*p2.y+p3.y)*t3)
+      };
+    }
+
+    function samplePath(cp, totalPts) {
+      var pts = [];
+      var segs = cp.length - 1;
+      var perSeg = Math.ceil(totalPts / segs);
+      for (var i = 0; i < segs; i++) {
+        var p0 = cp[Math.max(0, i-1)];
+        var p1 = cp[i];
+        var p2 = cp[i+1];
+        var p3 = cp[Math.min(cp.length-1, i+2)];
+        for (var j = 0; j < perSeg; j++) {
+          pts.push(catmullRom(p0, p1, p2, p3, j/perSeg));
+        }
+      }
+      pts.push(cp[cp.length-1]);
+      return pts;
+    }
+
+    var pathPts = samplePath(CP, 600);
+
+    function getPt(t) {
+      var i = Math.min(Math.floor(t * (pathPts.length - 1)), pathPts.length - 1);
+      return pathPts[i];
+    }
+
+    function getAngle(t) {
+      var i = Math.min(Math.floor(t * (pathPts.length - 1)), pathPts.length - 4);
+      var a = pathPts[Math.max(0, i)];
+      var b = pathPts[Math.min(pathPts.length-1, i+4)];
+      return Math.atan2(b.y - a.y, b.x - a.x);
+    }
+
+    function getNormal(t) {
+      var a = getAngle(t);
+      return { x: -Math.sin(a), y: Math.cos(a) };
+    }
+
+    var STOPS = [
+      {
+        t: 0.40, id: 0,
+        stopLabel: 'STOP 1',
+        title: 'Stock Price Prediction ML Pipeline',
+        desc: 'End-to-end ML pipeline with 28 technical indicators, XGBoost, SHAP interpretability, and a live Streamlit dashboard.',
+        tags: ['Python','XGBoost','SHAP','Streamlit'],
+        link: 'https://github.com/HidayaPatel/stock-prediction-streamlit'
+      },
+      {
+        t: 0.65, id: 1,
+        stopLabel: 'STOP 2',
+        title: 'Regression Analysis — Starbucks Sugar',
+        desc: 'Regression analysis identifying which nutritional factors most predict sugar content in Starbucks drinks.',
+        tags: ['R','Linear Regression','ggplot2'],
+        link: 'https://github.com/Hids-ap/Regression-Analysis-of-sugar-content-in-Starbucks-drinks'
+      },
+      {
+        t: 0.88, id: 2,
+        stopLabel: 'STOP 3',
+        title: 'K-Means Clustering — COVID-19 Ontario',
+        desc: 'K-Means and Hierarchical clustering to map COVID-19 severity across Ontario regions for resource allocation insights.',
+        tags: ['Python','K-Means','Pandas','Seaborn'],
+        link: 'https://github.com/Hids-ap/Using-K-means-and-Hierarchal-clustering-approach-to-weigh-severity-of-COVID-19-in-Ontario'
+      }
+    ];
+
+    var stopPositions = STOPS.map(function(s) {
+      return Object.assign({}, s, {
+        pos: getPt(s.t),
+        norm: getNormal(s.t)
+      });
+    });
+
+    function showBubble(stopIdx) {
+      var s = stopPositions[stopIdx];
+      var b = document.getElementById('bubble-' + stopIdx);
+
+      document.getElementById('b' + stopIdx + '-title').textContent = s.title;
+      document.getElementById('b' + stopIdx + '-desc').textContent = s.desc;
+      document.getElementById('b' + stopIdx + '-tags').innerHTML = s.tags.map(function(tag) {
+        return '<span class="bubble-tag">' + tag + '</span>';
+      }).join('');
+      document.getElementById('b' + stopIdx + '-link').href = s.link;
+
+      var signX = s.pos.x + s.norm.x * 42;
+      var signY = s.pos.y + s.norm.y * 42;
+
+      var bubbleW = 230;
+      var bubbleH = 180;
+
+      var left, top, arrowClass;
+
+      if (signX > CW * 0.6) {
+        left = signX - bubbleW - 20;
+        top = signY - 30;
+        arrowClass = 'arrow-right';
+      } else {
+        left = signX + 20;
+        top = signY - 30;
+        arrowClass = 'arrow-left';
+      }
+
+      left = Math.max(4, Math.min(left, CW - bubbleW - 4));
+      top = Math.max(4, Math.min(top, CH - bubbleH - 4));
+
+      b.style.left = left + 'px';
+      b.style.top = top + 'px';
+      b.className = 'stop-bubble ' + arrowClass;
+      b.style.display = 'block';
+    }
+
+    function hideBubble(idx) {
+      document.getElementById('bubble-' + idx).style.display = 'none';
+    }
+
+    function keepDriving(idx) {
+      hideBubble(idx);
+      paused = false;
+    }
+
+    var carT = 0, speed = 0, steer = 0;
+    var paused = false;
+    var triggered = new Set();
+    var keys = {};
+
+    document.addEventListener('keydown', function(e) {
+      keys[e.key] = true;
+      if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].indexOf(e.key) !== -1) e.preventDefault();
+    });
+    document.addEventListener('keyup', function(e) { keys[e.key] = false; });
+
+    var ROAD_W = 54;
+
+    var treeData = [];
+    function initTrees() {
+      var count = 0;
+      var iterations = 0;
+      while (count < 18 && iterations < 200) {
+        iterations++;
+        var tx = 20 + Math.random() * (CW - 40);
+        var ty = 20 + Math.random() * (CH - 40);
+        var tooClose = false;
+        for (var pi = 0; pi < pathPts.length; pi += 10) {
+          var p = pathPts[pi];
+          var dx = p.x - tx, dy = p.y - ty;
+          if (Math.sqrt(dx*dx+dy*dy) < ROAD_W + 20) { tooClose = true; break; }
+        }
+        if (!tooClose) {
+          treeData.push({x: tx, y: ty, r: 10 + Math.random()*8});
+          count++;
+        }
+      }
+    }
+    initTrees();
+
+    function drawTrees() {
+      treeData.forEach(function(t) {
+        ctx.fillStyle = '#3a2010';
+        ctx.fillRect(t.x-2, t.y+t.r-2, 4, 10);
+        ctx.fillStyle = '#4a5e20';
+        ctx.shadowColor = 'rgba(0,0,0,0.3)';
+        ctx.shadowBlur = 4;
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, t.r, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = '#606c38';
+        ctx.beginPath();
+        ctx.arc(t.x-3, t.y-3, t.r*0.65, 0, Math.PI*2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+    }
+
+    function drawStopSigns() {
+      stopPositions.forEach(function(s, i) {
+        var norm = s.norm;
+        var px = s.pos.x + norm.x * 42;
+        var py = s.pos.y + norm.y * 42;
+        var hit = triggered.has(i);
+
+        ctx.fillStyle = '#aaa';
+        ctx.fillRect(px-2, py-28, 4, 28);
+
+        ctx.save();
+        ctx.translate(px, py-30);
+        ctx.shadowColor = hit ? 'rgba(96,108,56,0.6)' : 'rgba(188,108,37,0.7)';
+        ctx.shadowBlur = hit ? 6 : 14;
+
+        ctx.fillStyle = hit ? '#606c38' : '#bc6c25';
+        ctx.beginPath();
+        ctx.roundRect(-24, -16, 48, 32, 6);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = '#fefae0';
+        ctx.font = 'bold 9px Segoe UI';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('STOP ' + (i+1), 0, -4);
+        ctx.fillText(hit ? '\u2713' : '\u25CF', 0, 8);
+        ctx.restore();
+      });
+    }
+
+    function drawCar() {
+      var pos = getPt(carT);
+      var angle = getAngle(carT);
+      var norm = getNormal(carT);
+      var wx = norm.x * steer * 5;
+      var wy = norm.y * steer * 5;
+
+      ctx.save();
+      ctx.translate(pos.x + wx, pos.y + wy);
+      ctx.rotate(angle + steer * 0.08);
+
+      ctx.fillStyle = 'rgba(0,0,0,0.28)';
+      ctx.beginPath();
+      ctx.ellipse(3, 6, 15, 8, 0, 0, Math.PI*2);
+      ctx.fill();
+
+      ctx.fillStyle = '#bc6c25';
+      ctx.shadowColor = '#bc6c25';
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      ctx.roundRect(-13, -22, 26, 44, 6);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      ctx.fillStyle = '#8a4a15';
+      ctx.beginPath();
+      ctx.roundRect(-9, -14, 18, 22, 4);
+      ctx.fill();
+
+      ctx.fillStyle = 'rgba(220,240,255,0.8)';
+      ctx.beginPath();
+      ctx.roundRect(-7, -20, 14, 9, 3);
+      ctx.fill();
+
+      ctx.fillStyle = 'rgba(220,240,255,0.5)';
+      ctx.beginPath();
+      ctx.roundRect(-6, 9, 12, 8, 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#1a1a1a';
+      var wheels = [[-15,-16],[10,-16],[-15,8],[10,8]];
+      wheels.forEach(function(w) {
+        ctx.beginPath();
+        ctx.roundRect(w[0], w[1], 5, 10, 2);
+        ctx.fill();
+        ctx.fillStyle = '#555';
+        ctx.beginPath();
+        ctx.arc(w[0]+2.5, w[1]+5, 2, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = '#1a1a1a';
+      });
+
+      ctx.fillStyle = '#ffe566';
+      ctx.shadowColor = '#ffe566';
+      ctx.shadowBlur = 8;
+      [[-7,-23],[7,-23]].forEach(function(l) {
+        ctx.beginPath();
+        ctx.ellipse(l[0], l[1], 4, 2.5, 0, 0, Math.PI*2);
+        ctx.fill();
+      });
+
+      ctx.fillStyle = '#ff3b3b';
+      ctx.shadowColor = '#ff3b3b';
+      [[-6,22],[6,22]].forEach(function(l) {
+        ctx.beginPath();
+        ctx.ellipse(l[0], l[1], 3.5, 2, 0, 0, Math.PI*2);
+        ctx.fill();
+      });
+      ctx.shadowBlur = 0;
+      ctx.restore();
+    }
+
+    function drawHUD() {
+      if (speed < 0.0002 && carT < 0.96 && !paused) {
+        ctx.fillStyle = 'rgba(254,250,224,0.55)';
+        ctx.font = 'bold 13px Segoe UI';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'alphabetic';
+        ctx.fillText('Press \u2191 to drive', CW/2, CH - 12);
+      }
+
+      ctx.fillStyle = 'rgba(254,250,224,0.35)';
+      ctx.font = '11px Segoe UI';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillText('Stops visited: ' + triggered.size + ' / 3', CW - 12, CH - 10);
+    }
+
+    function draw() {
+      ctx.fillStyle = '#283618';
+      ctx.fillRect(0, 0, CW, CH);
+
+      ctx.fillStyle = '#2f3d1a';
+      for (var x = 0; x < CW; x += 80) {
+        for (var y = 0; y < CH; y += 80) {
+          ctx.fillRect(x, y, 40, 40);
+        }
+      }
+
+      drawTrees();
+
+      ctx.save();
+      ctx.strokeStyle = 'rgba(0,0,0,0.35)';
+      ctx.lineWidth = ROAD_W + 8;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      pathPts.forEach(function(p, i) {
+        if (i === 0) ctx.moveTo(p.x+3, p.y+4);
+        else ctx.lineTo(p.x+3, p.y+4);
+      });
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.save();
+      ctx.strokeStyle = '#4a3f2a';
+      ctx.lineWidth = ROAD_W;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      pathPts.forEach(function(p, i) {
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      });
+      ctx.stroke();
+      ctx.restore();
+
+      [-1, 1].forEach(function(side) {
+        ctx.save();
+        ctx.strokeStyle = 'rgba(254,250,224,0.5)';
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        pathPts.forEach(function(p, i) {
+          var t = i / (pathPts.length - 1);
+          var ang = getAngle(t);
+          var nx = -Math.sin(ang) * (ROAD_W/2 - 3) * side;
+          var ny =  Math.cos(ang) * (ROAD_W/2 - 3) * side;
+          if (i === 0) ctx.moveTo(p.x+nx, p.y+ny);
+          else ctx.lineTo(p.x+nx, p.y+ny);
+        });
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      ctx.save();
+      ctx.strokeStyle = 'rgba(221,161,94,0.8)';
+      ctx.lineWidth = 2.5;
+      ctx.setLineDash([16, 14]);
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      pathPts.forEach(function(p, i) {
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      });
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+
+      drawStopSigns();
+      drawCar();
+      drawHUD();
+    }
+
+    function tick() {
+      if (!paused) {
+        var accel = (keys['ArrowUp'] || keys['w'] || keys['W']) ? 0.0009 : 0;
+        var brake = (keys['ArrowDown'] || keys['s'] || keys['S']) ? 0.0014 : 0;
+        speed += accel;
+        speed -= brake;
+        speed = Math.max(0, Math.min(speed, 0.0042));
+        speed *= 0.97;
+        if (keys['ArrowLeft'] || keys['a'] || keys['A']) steer = Math.max(-1, steer - 0.1);
+        else if (keys['ArrowRight'] || keys['d'] || keys['D']) steer = Math.min(1, steer + 0.1);
+        else steer *= 0.78;
+        carT = Math.min(1, carT + speed);
+        STOPS.forEach(function(s, i) {
+          if (!triggered.has(i) && Math.abs(carT - s.t) < 0.018) {
+            triggered.add(i);
+            speed = 0;
+            paused = true;
+            setTimeout(function() { showBubble(i); }, 200);
+          }
+        });
+        if (carT >= 0.97 && triggered.size === 3) {
+          paused = true;
+          setTimeout(function() { document.getElementById('end-screen').classList.add('active'); }, 600);
+        }
+      }
+      draw();
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  </script>
+</body>
+</html>

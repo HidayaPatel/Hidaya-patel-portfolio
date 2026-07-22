@@ -1,229 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stock Price Prediction ML Pipeline &mdash; Hidaya Patel</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock Price Prediction ML Pipeline — Hidaya Patel</title>
   <style>
-    body { background-color: #f0f4f8; color: #222; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #fefae0; color: #283618; }
 
-    /* Hero */
-    .project-hero {
-      background: linear-gradient(135deg, #2E86AB 0%, #1a5a7a 100%);
-      color: #fff;
-      padding: 70px 24px 60px;
+    nav {
+      background: #283618;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 62px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo {
+      color: #fefae0;
+      font-size: 1.2rem;
+      font-weight: 800;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+    }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      color: #dda15e;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #bc6c25; }
+
+    .hero {
+      background: #283618;
+      padding: 60px 20px;
       text-align: center;
     }
-    .project-hero .back-link {
+    .back-link {
       display: inline-block;
-      color: rgba(255,255,255,0.75);
+      color: #dda15e;
       text-decoration: none;
       font-size: 0.9rem;
-      margin-bottom: 28px;
-      border: 1px solid rgba(255,255,255,0.35);
-      padding: 6px 16px;
-      border-radius: 20px;
-      transition: background 0.2s;
+      font-weight: 600;
+      margin-bottom: 20px;
+      transition: color 0.2s;
     }
-    .project-hero .back-link:hover { background: rgba(255,255,255,0.15); }
-    .project-hero h1 {
-      font-size: clamp(1.7rem, 4vw, 2.8rem);
+    .back-link:hover { color: #bc6c25; }
+    .hero h1 {
+      color: #fefae0;
+      font-size: clamp(1.5rem, 3.5vw, 2.4rem);
       font-weight: 800;
       margin-bottom: 14px;
       line-height: 1.2;
     }
-    .project-hero .hero-subtitle {
-      font-size: 1.05rem;
-      opacity: 0.85;
-      letter-spacing: 0.5px;
-    }
-
-    /* Content wrapper */
-    .project-content {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 52px 24px 72px;
-    }
-
-    /* Section headings */
-    .project-content h2 {
-      color: #2E86AB;
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-top: 48px;
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid #2E86AB;
-    }
-
-    /* Body text */
-    .project-content p {
-      color: #444;
-      line-height: 1.8;
-      margin-bottom: 16px;
+    .hero-subtitle {
+      color: #dda15e;
       font-size: 1rem;
-    }
-
-    /* Feature list */
-    .feature-list {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 16px;
-    }
-    .feature-list li {
-      padding: 10px 0 10px 28px;
-      border-bottom: 1px solid #e8edf2;
-      color: #333;
-      font-size: 0.98rem;
-      line-height: 1.6;
-      position: relative;
-    }
-    .feature-list li:last-child { border-bottom: none; }
-    .feature-list li::before {
-      content: "&#9656;";
-      position: absolute;
-      left: 0;
-      color: #A23B72;
-      font-size: 1rem;
-    }
-
-    /* Tech tags */
-    .tech-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 8px;
-    }
-    .tech-tag-item {
-      background: #2E86AB;
-      color: #fff;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.87rem;
       font-weight: 600;
     }
 
-    /* Results block */
-    .results-block {
-      background: #fff;
-      border-left: 4px solid #2E86AB;
-      border-radius: 6px;
-      padding: 20px 24px;
-      margin: 16px 0;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    .content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 48px 24px;
     }
-    .results-block p { margin: 0; }
 
-    /* CTA */
-    .cta-section {
-      margin-top: 56px;
-      text-align: center;
-      border-top: 1px solid #dde3ea;
-      padding-top: 40px;
+    .content h2 {
+      color: #283618;
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #606c38;
     }
-    .cta-section p { color: #666; margin-bottom: 24px; }
-    .btn-github {
+
+    .content p {
+      color: #606c38;
+      font-size: 1rem;
+      line-height: 1.75;
+      margin-bottom: 32px;
+    }
+
+    .content ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 32px;
+    }
+    .content ul li {
+      color: #606c38;
+      font-size: 1rem;
+      line-height: 1.7;
+      padding: 8px 0 8px 24px;
+      position: relative;
+      border-bottom: 1px solid rgba(96,108,56,0.2);
+    }
+    .content ul li:last-child { border-bottom: none; }
+    .content ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 8px;
+      background: #bc6c25;
+      border-radius: 50%;
+    }
+
+    .tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 40px;
+    }
+    .tag {
+      background: #283618;
+      color: #fefae0;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 20px;
+    }
+
+    .cta-btn {
       display: inline-block;
-      background: #A23B72;
-      color: #fff;
-      padding: 14px 32px;
-      border-radius: 8px;
+      background: #bc6c25;
+      color: #fefae0;
       text-decoration: none;
+      border-radius: 8px;
+      padding: 14px 28px;
       font-weight: 700;
       font-size: 1rem;
       transition: background 0.2s, transform 0.2s;
-      box-shadow: 0 3px 16px rgba(162,59,114,0.3);
+      box-shadow: 0 4px 16px rgba(188,108,37,0.35);
     }
-    .btn-github:hover { background: #8e2f60; transform: translateY(-2px); }
+    .cta-btn:hover { background: #a85a1e; transform: translateY(-2px); }
 
     footer {
-      background: #1a1a2e;
-      color: #5a6888;
+      background: #283618;
+      border-top: 1px solid #606c38;
       text-align: center;
-      padding: 24px;
-      font-size: 0.88rem;
+      padding: 22px 20px;
+      color: #606c38;
+      font-size: 0.85rem;
     }
-    footer a { color: #2E86AB; text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="nav-container">
-    <div class="logo">Hidaya Patel</div>
-    <ul class="nav-menu">
+  <nav>
+    <a href="index.html" class="nav-logo">Hidaya Patel</a>
+    <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="resume.html">Resume</a></li>
     </ul>
-  </div>
-</nav>
+  </nav>
 
-<div class="project-hero">
-  <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
-  <h1>Stock Price Prediction ML Pipeline</h1>
-  <p class="hero-subtitle">Machine Learning &nbsp;&middot;&nbsp; Financial Analytics &nbsp;&middot;&nbsp; Deployment</p>
-</div>
+  <section class="hero">
+    <a href="index.html" class="back-link">&#x2190; Back to Portfolio</a>
+    <h1>Stock Price Prediction ML Pipeline</h1>
+    <p class="hero-subtitle">Machine Learning &middot; Financial Analytics &middot; Deployment</p>
+  </section>
 
-<div class="project-content">
-
-  <h2>Overview</h2>
-  <p>
-    This project delivers a complete, production-ready machine learning pipeline for predicting short-term stock price movements.
-    By combining rigorous feature engineering with interpretable modeling, it bridges the gap between raw financial data and
-    actionable trading signals. The pipeline processes historical OHLCV data, derives 28 hand-crafted technical indicators,
-    trains and compares multiple models, and surfaces predictions through an interactive Streamlit dashboard.
-  </p>
-  <p>
-    The emphasis throughout was on interpretability: SHAP (SHapley Additive exPlanations) values reveal exactly which
-    indicators drove each individual prediction, giving analysts confidence in the model's reasoning rather than just its output.
-  </p>
-
-  <h2>Key Features</h2>
-  <ul class="feature-list">
-    <li><strong>28 Technical Indicators</strong> &mdash; RSI, MACD, Bollinger Bands, ATR, OBV, moving averages, momentum, and more, all engineered from raw price data.</li>
-    <li><strong>Multiple Model Comparison</strong> &mdash; XGBoost, Random Forest, Logistic Regression, and SVM evaluated with walk-forward cross-validation to prevent data leakage.</li>
-    <li><strong>SHAP Interpretability</strong> &mdash; Feature importance and individual prediction explanations via SHAP waterfall and beeswarm plots.</li>
-    <li><strong>Financial Backtesting</strong> &mdash; Strategy simulation with realistic transaction costs, measuring Sharpe ratio, max drawdown, and cumulative returns.</li>
-    <li><strong>Streamlit Dashboard</strong> &mdash; Live, interactive visualization of signals, indicator values, and model confidence for any ticker symbol.</li>
-  </ul>
-
-  <h2>Tech Stack</h2>
-  <div class="tech-tags">
-    <span class="tech-tag-item">Python</span>
-    <span class="tech-tag-item">XGBoost</span>
-    <span class="tech-tag-item">SHAP</span>
-    <span class="tech-tag-item">Streamlit</span>
-    <span class="tech-tag-item">Scikit-learn</span>
-    <span class="tech-tag-item">Pandas</span>
-    <span class="tech-tag-item">NumPy</span>
-    <span class="tech-tag-item">Matplotlib</span>
-    <span class="tech-tag-item">yfinance</span>
-  </div>
-
-  <h2>Results</h2>
-  <div class="results-block">
+  <div class="content">
+    <h2>Overview</h2>
     <p>
-      The XGBoost classifier achieved the best performance across walk-forward validation folds.
-      SHAP analysis identified RSI, 20-day Bollinger Band width, and MACD histogram as the top three predictive features.
-      The backtested trading strategy demonstrated a positive risk-adjusted return profile, outperforming a simple
-      buy-and-hold benchmark on the test period, while maintaining interpretable decision boundaries through SHAP explanations.
+      This end-to-end machine learning pipeline predicts stock price movements using a rich set of 28 technical indicators derived from historical OHLCV data. The project covers the full data science lifecycle — from feature engineering and model selection to interpretability and live deployment via a Streamlit dashboard. Multiple classification models were evaluated and compared, with XGBoost emerging as the top performer. SHAP values provide transparent, stakeholder-friendly explanations of each prediction, while financial backtesting metrics validate real-world viability.
     </p>
+
+    <h2>Key Features</h2>
+    <ul>
+      <li>28 Technical Indicators including RSI, MACD, Bollinger Bands, EMA, ATR, and more</li>
+      <li>Multiple Model Comparison across XGBoost, Random Forest, Logistic Regression, and SVM</li>
+      <li>SHAP Interpretability for transparent, feature-level prediction explanations</li>
+      <li>Financial Backtesting with Sharpe ratio and maximum drawdown analysis</li>
+      <li>Live Streamlit Dashboard for interactive visualization and real-time exploration</li>
+    </ul>
+
+    <h2>Tech Stack</h2>
+    <div class="tags-row">
+      <span class="tag">Python</span>
+      <span class="tag">XGBoost</span>
+      <span class="tag">SHAP</span>
+      <span class="tag">Streamlit</span>
+      <span class="tag">Pandas</span>
+      <span class="tag">Scikit-learn</span>
+      <span class="tag">Matplotlib</span>
+    </div>
+
+    <a href="https://github.com/HidayaPatel/stock-prediction-streamlit" target="_blank" class="cta-btn">View on GitHub &#x2192;</a>
   </div>
 
-  <div class="cta-section">
-    <p>View the full source code, notebooks, and documentation on GitHub.</p>
-    <a class="btn-github" href="https://github.com/Hids-ap" target="_blank" rel="noopener noreferrer">
-      View on GitHub &rarr;
-    </a>
-  </div>
-
-</div>
-
-<footer>
-  &copy; 2025 Hidaya Patel &mdash; <a href="index.html">Back to Portfolio</a>
-</footer>
+  <footer>
+    <p>&#169; 2025 Hidaya Patel</p>
+  </footer>
 
 </body>
 </html>

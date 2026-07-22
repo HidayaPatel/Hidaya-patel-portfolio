@@ -1,230 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>K-Means Clustering &mdash; COVID-19 Severity in Ontario &mdash; Hidaya Patel</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K-Means Clustering — COVID-19 Ontario — Hidaya Patel</title>
   <style>
-    body { background-color: #f0f5f1; color: #222; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #fefae0; color: #283618; }
 
-    /* Hero */
-    .project-hero {
-      background: linear-gradient(135deg, #1a2f1a 0%, #0d4a2a 100%);
-      color: #fff;
-      padding: 70px 24px 60px;
-      text-align: center;
+    nav {
+      background: #283618;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 62px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    .project-hero .back-link {
+    .nav-logo {
+      color: #fefae0;
+      font-size: 1.2rem;
+      font-weight: 800;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+    }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      color: #dda15e;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #bc6c25; }
+
+    .hero {
+      background: #283618;
+      padding: 60px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(96,108,56,0.25) 0%, rgba(40,54,24,0) 60%);
+      pointer-events: none;
+    }
+    .back-link {
       display: inline-block;
-      color: rgba(255,255,255,0.75);
+      color: #dda15e;
       text-decoration: none;
       font-size: 0.9rem;
-      margin-bottom: 28px;
-      border: 1px solid rgba(255,255,255,0.35);
-      padding: 6px 16px;
-      border-radius: 20px;
-      transition: background 0.2s;
+      font-weight: 600;
+      margin-bottom: 20px;
+      transition: color 0.2s;
+      position: relative;
     }
-    .project-hero .back-link:hover { background: rgba(255,255,255,0.15); }
-    .project-hero h1 {
-      font-size: clamp(1.6rem, 4vw, 2.7rem);
+    .back-link:hover { color: #bc6c25; }
+    .hero h1 {
+      color: #fefae0;
+      font-size: clamp(1.5rem, 3.5vw, 2.4rem);
       font-weight: 800;
       margin-bottom: 14px;
       line-height: 1.2;
-    }
-    .project-hero .hero-subtitle {
-      font-size: 1.05rem;
-      opacity: 0.85;
-      letter-spacing: 0.5px;
-    }
-
-    /* Content wrapper */
-    .project-content {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 52px 24px 72px;
-    }
-
-    .project-content h2 {
-      color: #0d4a2a;
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-top: 48px;
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid #0d4a2a;
-    }
-
-    .project-content p {
-      color: #444;
-      line-height: 1.8;
-      margin-bottom: 16px;
-      font-size: 1rem;
-    }
-
-    .feature-list {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 16px;
-    }
-    .feature-list li {
-      padding: 10px 0 10px 28px;
-      border-bottom: 1px solid #d8ead0;
-      color: #333;
-      font-size: 0.98rem;
-      line-height: 1.6;
       position: relative;
     }
-    .feature-list li:last-child { border-bottom: none; }
-    .feature-list li::before {
-      content: "&#9656;";
-      position: absolute;
-      left: 0;
-      color: #2E86AB;
+    .hero-subtitle {
+      color: #dda15e;
       font-size: 1rem;
+      font-weight: 600;
+      position: relative;
     }
 
-    .tech-tags {
+    .content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+
+    .content h2 {
+      color: #283618;
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #606c38;
+    }
+
+    .content p {
+      color: #606c38;
+      font-size: 1rem;
+      line-height: 1.75;
+      margin-bottom: 32px;
+    }
+
+    .content ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 32px;
+    }
+    .content ul li {
+      color: #606c38;
+      font-size: 1rem;
+      line-height: 1.7;
+      padding: 8px 0 8px 24px;
+      position: relative;
+      border-bottom: 1px solid rgba(96,108,56,0.2);
+    }
+    .content ul li:last-child { border-bottom: none; }
+    .content ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 8px;
+      background: #bc6c25;
+      border-radius: 50%;
+    }
+
+    .tags-row {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 8px;
+      margin-bottom: 40px;
     }
-    .tech-tag-item {
-      background: #0d4a2a;
-      color: #fff;
+    .tag {
+      background: #283618;
+      color: #fefae0;
+      font-size: 0.82rem;
+      font-weight: 600;
       padding: 6px 16px;
       border-radius: 20px;
-      font-size: 0.87rem;
-      font-weight: 600;
     }
 
-    .results-block {
-      background: #fff;
-      border-left: 4px solid #0d4a2a;
-      border-radius: 6px;
-      padding: 20px 24px;
-      margin: 16px 0;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-    .results-block p { margin: 0; }
-
-    .cta-section {
-      margin-top: 56px;
-      text-align: center;
-      border-top: 1px solid #c8dfc0;
-      padding-top: 40px;
-    }
-    .cta-section p { color: #666; margin-bottom: 24px; }
-    .btn-github {
+    .cta-btn {
       display: inline-block;
-      background: #2E86AB;
-      color: #fff;
-      padding: 14px 32px;
-      border-radius: 8px;
+      background: #bc6c25;
+      color: #fefae0;
       text-decoration: none;
+      border-radius: 8px;
+      padding: 14px 28px;
       font-weight: 700;
       font-size: 1rem;
       transition: background 0.2s, transform 0.2s;
-      box-shadow: 0 3px 16px rgba(46,134,171,0.3);
+      box-shadow: 0 4px 16px rgba(188,108,37,0.35);
     }
-    .btn-github:hover { background: #256a8a; transform: translateY(-2px); }
+    .cta-btn:hover { background: #a85a1e; transform: translateY(-2px); }
 
     footer {
-      background: #1a1a2e;
-      color: #5a6888;
+      background: #283618;
+      border-top: 1px solid #606c38;
       text-align: center;
-      padding: 24px;
-      font-size: 0.88rem;
+      padding: 22px 20px;
+      color: #606c38;
+      font-size: 0.85rem;
     }
-    footer a { color: #2E86AB; text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="nav-container">
-    <div class="logo">Hidaya Patel</div>
-    <ul class="nav-menu">
+  <nav>
+    <a href="index.html" class="nav-logo">Hidaya Patel</a>
+    <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="resume.html">Resume</a></li>
     </ul>
-  </div>
-</nav>
+  </nav>
 
-<div class="project-hero">
-  <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
-  <h1>K-Means Clustering &mdash; COVID-19 Severity in Ontario</h1>
-  <p class="hero-subtitle">Unsupervised Learning &nbsp;&middot;&nbsp; Public Health Analytics</p>
-</div>
+  <section class="hero">
+    <a href="index.html" class="back-link">&#x2190; Back to Portfolio</a>
+    <h1>K-Means Clustering &#x2014; COVID-19 Severity in Ontario</h1>
+    <p class="hero-subtitle">Unsupervised Learning &middot; Public Health Analytics &middot; Python</p>
+  </section>
 
-<div class="project-content">
-
-  <h2>Overview</h2>
-  <p>
-    This project applies unsupervised machine learning to categorize the severity of COVID-19 outbreaks
-    across Ontario's public health regions. By combining K-Means and Hierarchical clustering techniques,
-    the analysis reveals natural groupings of regions based on case counts, hospitalization rates, fatality
-    rates, and vaccination coverage &mdash; producing a data-driven severity classification without any
-    predefined labels.
-  </p>
-  <p>
-    The findings offer practical value for public health decision-makers: understanding which regions cluster
-    together by severity profile enables more targeted resource allocation, vaccination campaign prioritization,
-    and policy responses. The project includes comprehensive visual cluster analysis to make findings accessible
-    to non-technical stakeholders.
-  </p>
-
-  <h2>Key Features</h2>
-  <ul class="feature-list">
-    <li><strong>K-Means and Hierarchical Clustering</strong> &mdash; Both methods applied and compared, with the optimal K selected via the Elbow Method and Silhouette Score analysis.</li>
-    <li><strong>Geographic Severity Mapping</strong> &mdash; Cluster labels mapped back to Ontario's public health unit boundaries to reveal spatial patterns in COVID-19 severity.</li>
-    <li><strong>Resource Allocation Insights</strong> &mdash; Cluster profiles translated into actionable recommendations for healthcare capacity planning and vaccine distribution.</li>
-    <li><strong>Visual Cluster Analysis</strong> &mdash; PCA-reduced scatter plots, dendrograms, heatmaps, and choropleth maps built with Seaborn and Matplotlib for intuitive interpretation.</li>
-    <li><strong>Feature Engineering</strong> &mdash; Derived severity composite scores from raw epidemiological data, with standardization to prevent scale bias in clustering.</li>
-  </ul>
-
-  <h2>Tech Stack</h2>
-  <div class="tech-tags">
-    <span class="tech-tag-item">Python</span>
-    <span class="tech-tag-item">K-Means</span>
-    <span class="tech-tag-item">Hierarchical Clustering</span>
-    <span class="tech-tag-item">Pandas</span>
-    <span class="tech-tag-item">Seaborn</span>
-    <span class="tech-tag-item">Scikit-learn</span>
-    <span class="tech-tag-item">Matplotlib</span>
-    <span class="tech-tag-item">NumPy</span>
-  </div>
-
-  <h2>Results</h2>
-  <div class="results-block">
+  <div class="content">
+    <h2>Overview</h2>
     <p>
-      The analysis identified three meaningful severity clusters across Ontario public health regions: low-severity,
-      moderate-severity, and high-severity clusters with distinct epidemiological profiles. The high-severity cluster
-      concentrated in the GTA and surrounding regions, consistent with population density patterns. Hierarchical
-      clustering dendrograms confirmed the natural partitioning at k=3. The geographic mapping revealed clear spatial
-      contiguity within clusters, validating the meaningfulness of the groupings and supporting targeted intervention
-      strategies for regional health authorities.
+      This project applies K-Means and Hierarchical clustering algorithms to COVID-19 case data across Ontario public health regions, with the goal of categorizing areas by severity and informing resource allocation decisions. Using Python's data science ecosystem, regional case metrics are clustered to reveal geographic patterns in outbreak intensity. Cluster profiles are visualized with Seaborn, and the dendrogram from hierarchical clustering validates the K-Means groupings. The insights support evidence-based public health planning by identifying which regions required the most urgent intervention.
     </p>
+
+    <h2>Key Features</h2>
+    <ul>
+      <li>K-Means clustering for regional severity categorization across Ontario public health units</li>
+      <li>Hierarchical clustering for dendrogram-based validation of cluster structure</li>
+      <li>Geographic severity mapping across Ontario regions</li>
+      <li>Visual cluster analysis with Seaborn heatmaps and scatter plots</li>
+      <li>Resource allocation insights derived from distinct cluster profiles</li>
+    </ul>
+
+    <h2>Tech Stack</h2>
+    <div class="tags-row">
+      <span class="tag">Python</span>
+      <span class="tag">K-Means</span>
+      <span class="tag">Hierarchical Clustering</span>
+      <span class="tag">Pandas</span>
+      <span class="tag">Seaborn</span>
+      <span class="tag">Scikit-learn</span>
+    </div>
+
+    <a href="https://github.com/Hids-ap/Using-K-means-and-Hierarchal-clustering-approach-to-weigh-severity-of-COVID-19-in-Ontario" target="_blank" class="cta-btn">View on GitHub &#x2192;</a>
   </div>
 
-  <div class="cta-section">
-    <p>Explore the full code, notebooks, and cluster visualizations on GitHub.</p>
-    <a class="btn-github"
-       href="https://github.com/Hids-ap/Using-K-means-and-Hierarchal-clustering-approach-to-weigh-severity-of-COVID-19-in-Ontario"
-       target="_blank"
-       rel="noopener noreferrer">
-      View on GitHub &rarr;
-    </a>
-  </div>
-
-</div>
-
-<footer>
-  &copy; 2025 Hidaya Patel &mdash; <a href="index.html">Back to Portfolio</a>
-</footer>
+  <footer>
+    <p>&#169; 2025 Hidaya Patel</p>
+  </footer>
 
 </body>
 </html>

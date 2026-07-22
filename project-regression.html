@@ -1,227 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Regression Analysis &mdash; Starbucks Sugar Content &mdash; Hidaya Patel</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regression Analysis — Starbucks Sugar Content — Hidaya Patel</title>
   <style>
-    body { background-color: #f9f0f4; color: #222; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #fefae0; color: #283618; }
 
-    /* Hero */
-    .project-hero {
-      background: linear-gradient(135deg, #A23B72 0%, #7b2d57 100%);
-      color: #fff;
-      padding: 70px 24px 60px;
+    nav {
+      background: #283618;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 62px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo {
+      color: #fefae0;
+      font-size: 1.2rem;
+      font-weight: 800;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+    }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      color: #dda15e;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #bc6c25; }
+
+    .hero {
+      background: #606c38;
+      padding: 60px 20px;
       text-align: center;
     }
-    .project-hero .back-link {
+    .back-link {
       display: inline-block;
-      color: rgba(255,255,255,0.75);
+      color: #dda15e;
       text-decoration: none;
       font-size: 0.9rem;
-      margin-bottom: 28px;
-      border: 1px solid rgba(255,255,255,0.35);
-      padding: 6px 16px;
-      border-radius: 20px;
-      transition: background 0.2s;
+      font-weight: 600;
+      margin-bottom: 20px;
+      transition: color 0.2s;
     }
-    .project-hero .back-link:hover { background: rgba(255,255,255,0.15); }
-    .project-hero h1 {
-      font-size: clamp(1.6rem, 4vw, 2.7rem);
+    .back-link:hover { color: #bc6c25; }
+    .hero h1 {
+      color: #fefae0;
+      font-size: clamp(1.5rem, 3.5vw, 2.4rem);
       font-weight: 800;
       margin-bottom: 14px;
       line-height: 1.2;
     }
-    .project-hero .hero-subtitle {
-      font-size: 1.05rem;
-      opacity: 0.85;
-      letter-spacing: 0.5px;
-    }
-
-    /* Content wrapper */
-    .project-content {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 52px 24px 72px;
-    }
-
-    .project-content h2 {
-      color: #A23B72;
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-top: 48px;
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid #A23B72;
-    }
-
-    .project-content p {
-      color: #444;
-      line-height: 1.8;
-      margin-bottom: 16px;
+    .hero-subtitle {
+      color: #dda15e;
       font-size: 1rem;
-    }
-
-    .feature-list {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 16px;
-    }
-    .feature-list li {
-      padding: 10px 0 10px 28px;
-      border-bottom: 1px solid #f0d8e4;
-      color: #333;
-      font-size: 0.98rem;
-      line-height: 1.6;
-      position: relative;
-    }
-    .feature-list li:last-child { border-bottom: none; }
-    .feature-list li::before {
-      content: "&#9656;";
-      position: absolute;
-      left: 0;
-      color: #2E86AB;
-      font-size: 1rem;
-    }
-
-    .tech-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 8px;
-    }
-    .tech-tag-item {
-      background: #A23B72;
-      color: #fff;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.87rem;
       font-weight: 600;
     }
 
-    .results-block {
-      background: #fff;
-      border-left: 4px solid #A23B72;
-      border-radius: 6px;
-      padding: 20px 24px;
-      margin: 16px 0;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    .content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 48px 24px;
     }
-    .results-block p { margin: 0; }
 
-    .cta-section {
-      margin-top: 56px;
-      text-align: center;
-      border-top: 1px solid #e8d0da;
-      padding-top: 40px;
+    .content h2 {
+      color: #283618;
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #606c38;
     }
-    .cta-section p { color: #666; margin-bottom: 24px; }
-    .btn-github {
+
+    .content p {
+      color: #606c38;
+      font-size: 1rem;
+      line-height: 1.75;
+      margin-bottom: 32px;
+    }
+
+    .content ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 32px;
+    }
+    .content ul li {
+      color: #606c38;
+      font-size: 1rem;
+      line-height: 1.7;
+      padding: 8px 0 8px 24px;
+      position: relative;
+      border-bottom: 1px solid rgba(96,108,56,0.2);
+    }
+    .content ul li:last-child { border-bottom: none; }
+    .content ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 8px;
+      background: #bc6c25;
+      border-radius: 50%;
+    }
+
+    .tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 40px;
+    }
+    .tag {
+      background: #283618;
+      color: #fefae0;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 20px;
+    }
+
+    .cta-btn {
       display: inline-block;
-      background: #2E86AB;
-      color: #fff;
-      padding: 14px 32px;
-      border-radius: 8px;
+      background: #bc6c25;
+      color: #fefae0;
       text-decoration: none;
+      border-radius: 8px;
+      padding: 14px 28px;
       font-weight: 700;
       font-size: 1rem;
       transition: background 0.2s, transform 0.2s;
-      box-shadow: 0 3px 16px rgba(46,134,171,0.3);
+      box-shadow: 0 4px 16px rgba(188,108,37,0.35);
     }
-    .btn-github:hover { background: #256a8a; transform: translateY(-2px); }
+    .cta-btn:hover { background: #a85a1e; transform: translateY(-2px); }
 
     footer {
-      background: #1a1a2e;
-      color: #5a6888;
+      background: #283618;
+      border-top: 1px solid #606c38;
       text-align: center;
-      padding: 24px;
-      font-size: 0.88rem;
+      padding: 22px 20px;
+      color: #606c38;
+      font-size: 0.85rem;
     }
-    footer a { color: #A23B72; text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="nav-container">
-    <div class="logo">Hidaya Patel</div>
-    <ul class="nav-menu">
+  <nav>
+    <a href="index.html" class="nav-logo">Hidaya Patel</a>
+    <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="resume.html">Resume</a></li>
     </ul>
-  </div>
-</nav>
+  </nav>
 
-<div class="project-hero">
-  <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
-  <h1>Regression Analysis &mdash; Starbucks Sugar Content</h1>
-  <p class="hero-subtitle">Statistical Analysis &nbsp;&middot;&nbsp; R &nbsp;&middot;&nbsp; Data Science</p>
-</div>
+  <section class="hero">
+    <a href="index.html" class="back-link">&#x2190; Back to Portfolio</a>
+    <h1>Regression Analysis &#x2014; Starbucks Sugar Content</h1>
+    <p class="hero-subtitle">Statistical Analysis &middot; R &middot; Data Science</p>
+  </section>
 
-<div class="project-content">
-
-  <h2>Overview</h2>
-  <p>
-    This statistical analysis investigates the nutritional composition of Starbucks beverages to identify which
-    characteristics most strongly predict sugar content. Using a comprehensive dataset of Starbucks menu items,
-    the project applies linear regression modeling with rigorous diagnostics to uncover the key drivers of
-    sugar levels across the product range.
-  </p>
-  <p>
-    The analysis was conducted entirely in R, leveraging the tidyverse ecosystem for data wrangling and ggplot2
-    for rich, publication-quality visualizations. Special attention was paid to model assumptions &mdash; linearity,
-    homoscedasticity, normality of residuals, and absence of influential outliers &mdash; to ensure the validity
-    of statistical inferences.
-  </p>
-
-  <h2>Key Features</h2>
-  <ul class="feature-list">
-    <li><strong>Nutritional Factor Analysis</strong> &mdash; Systematic investigation of calories, fat, carbohydrates, fiber, protein, and sodium as predictors of sugar content.</li>
-    <li><strong>Regression Diagnostics</strong> &mdash; Residual plots, Q-Q plots, Cook's Distance, and VIF multicollinearity checks to validate every model assumption.</li>
-    <li><strong>Visualization of Predictors</strong> &mdash; Scatter plots with regression lines, partial regression plots, and coefficient forest plots built with ggplot2.</li>
-    <li><strong>Significance Testing</strong> &mdash; F-tests, t-tests on individual coefficients, and confidence intervals to identify statistically meaningful predictors.</li>
-    <li><strong>Model Comparison</strong> &mdash; Stepwise selection and AIC/BIC criteria used to arrive at a parsimonious final model from the full predictor set.</li>
-  </ul>
-
-  <h2>Tech Stack</h2>
-  <div class="tech-tags">
-    <span class="tech-tag-item">R</span>
-    <span class="tech-tag-item">Linear Regression</span>
-    <span class="tech-tag-item">ggplot2</span>
-    <span class="tech-tag-item">Statistical Modeling</span>
-    <span class="tech-tag-item">tidyverse</span>
-    <span class="tech-tag-item">dplyr</span>
-    <span class="tech-tag-item">R Markdown</span>
-  </div>
-
-  <h2>Results</h2>
-  <div class="results-block">
+  <div class="content">
+    <h2>Overview</h2>
     <p>
-      The final linear regression model explained a substantial proportion of variance in sugar content across
-      Starbucks beverages. Carbohydrate content emerged as the strongest single predictor, followed by calorie
-      count and serving size. Fiber content showed a significant negative association with sugar, aligning with
-      nutritional theory. Model diagnostics confirmed that assumptions were sufficiently met for valid inference,
-      and the results provide actionable insight for consumers monitoring dietary sugar intake.
+      This project applies linear regression to a comprehensive Starbucks nutritional dataset, investigating which nutritional factors are most strongly associated with sugar content across the menu. Using R and the tidyverse ecosystem, the analysis covers full model specification, diagnostics, residual checks, and feature significance testing. Visualizations built with ggplot2 communicate findings clearly, revealing the top predictors of sugar content and offering insights relevant to menu transparency and dietary awareness.
     </p>
+
+    <h2>Key Features</h2>
+    <ul>
+      <li>Nutritional factor regression analysis across the full Starbucks menu dataset</li>
+      <li>Full model diagnostics including residual plots and Q-Q analysis</li>
+      <li>Feature significance testing with p-values and confidence intervals</li>
+      <li>Data visualization with ggplot2 for intuitive result communication</li>
+      <li>Identification of top sugar predictors and their relative importance</li>
+    </ul>
+
+    <h2>Tech Stack</h2>
+    <div class="tags-row">
+      <span class="tag">R</span>
+      <span class="tag">Linear Regression</span>
+      <span class="tag">ggplot2</span>
+      <span class="tag">Statistical Modeling</span>
+      <span class="tag">RStudio</span>
+    </div>
+
+    <a href="https://github.com/Hids-ap/Regression-Analysis-of-sugar-content-in-Starbucks-drinks" target="_blank" class="cta-btn">View on GitHub &#x2192;</a>
   </div>
 
-  <div class="cta-section">
-    <p>Explore the full R Markdown analysis, data, and visualizations on GitHub.</p>
-    <a class="btn-github"
-       href="https://github.com/Hids-ap/Regression-Analysis-of-sugar-content-in-Starbucks-drinks"
-       target="_blank"
-       rel="noopener noreferrer">
-      View on GitHub &rarr;
-    </a>
-  </div>
-
-</div>
-
-<footer>
-  &copy; 2025 Hidaya Patel &mdash; <a href="index.html">Back to Portfolio</a>
-</footer>
+  <footer>
+    <p>&#169; 2025 Hidaya Patel</p>
+  </footer>
 
 </body>
 </html>
