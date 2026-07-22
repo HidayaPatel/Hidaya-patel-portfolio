@@ -5,56 +5,406 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hidaya Patel - Data Scientist</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #0d0d1a;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .navbar {
+            background-color: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(46, 134, 171, 0.3);
+        }
+
+        .game-hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 62px);
+            padding: 10px 20px;
+            gap: 10px;
+        }
+
+        .game-tagline {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.82rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .game-tagline span { color: #A23B72; }
+
+        #gameCanvas {
+            border: 1.5px solid rgba(46, 134, 171, 0.4);
+            border-radius: 10px;
+            box-shadow: 0 0 40px rgba(46,134,171,0.12), 0 0 80px rgba(46,134,171,0.05);
+            display: block;
+            max-width: 100%;
+        }
+
+        /* ── Overlays ── */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 5, 20, 0.82);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            backdrop-filter: blur(4px);
+        }
+
+        .card {
+            background: #11112a;
+            border: 1.5px solid rgba(46, 134, 171, 0.45);
+            border-radius: 14px;
+            padding: 2.2rem 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            color: white;
+            box-shadow: 0 0 60px rgba(46,134,171,0.18);
+            animation: fadeUp 0.3s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity:0; transform:translateY(16px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        .card h2 { color:#2E86AB; margin-bottom:0.3rem; font-size:1.4rem; }
+        .card .type {
+            color:#A23B72; font-size:0.82rem; font-weight:700;
+            margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.06em;
+        }
+        .card p { color:#b0b0c8; line-height:1.75; margin-bottom:1.2rem; font-size:0.93rem; }
+
+        .tags { display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:1.5rem; }
+        .tag {
+            background:rgba(46,134,171,0.15);
+            border:1px solid rgba(46,134,171,0.4);
+            color:#2E86AB;
+            padding:0.2rem 0.7rem;
+            border-radius:20px;
+            font-size:0.76rem;
+            font-weight:700;
+        }
+
+        .btn-row { display:flex; gap:0.8rem; flex-wrap:wrap; }
+        .btn {
+            padding:0.6rem 1.3rem; border-radius:6px; font-size:0.88rem;
+            font-weight:700; cursor:pointer; border:none; text-decoration:none;
+            display:inline-block; transition:opacity 0.2s;
+        }
+        .btn:hover { opacity:0.82; }
+        .btn-blue { background:#2E86AB; color:white; }
+        .btn-pink { background:#A23B72; color:white; }
+
+        .start-card { text-align:center; }
+        .start-card h1 { font-size:2rem; color:#2E86AB; margin-bottom:0.3rem; }
+        .start-card .sub  { color:#b0b0c8; margin-bottom:0.4rem; font-size:0.95rem; }
+        .start-card .hint { color:rgba(255,255,255,0.25); font-size:0.78rem; margin-bottom:1.6rem; letter-spacing:0.1em; }
+
+        .victory-card { text-align:center; }
+        .victory-card h2 { font-size:1.7rem; margin-bottom:0.5rem; }
+
+        .hidden { display:none !important; }
+    </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <h1 class="logo">Hidaya Patel</h1>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="active">Home</a></li>
-                <li><a href="resume.html">Resume</a></li>
-                <li><a href="projects.html">Projects</a></li>
-            </ul>
-        </div>
-    </nav>
 
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Welcome!</h1>
-            <h2>I'm Hidaya Patel</h2>
-            <p class="subtitle">Data Science Graduate Student | Machine Learning Enthusiast</p>
-        </div>
-    </section>
+<nav class="navbar">
+    <div class="nav-container">
+        <h1 class="logo">Hidaya Patel</h1>
+        <ul class="nav-menu">
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="resume.html">Resume</a></li>
+        </ul>
+    </div>
+</nav>
 
-    <section class="about">
-        <div class="container">
-            <h2>About Me</h2>
-            <div class="about-content">
-                <div class="about-text">
-                    <h3>Academic Background</h3>
-                    <p>I am currently pursuing a Master's degree in Data Science at Eastern University, where I am developing expertise in machine learning, statistical analysis, and data-driven decision making. My coursework has equipped me with strong technical skills in Python, machine learning frameworks, and data visualization.</p>
-                    
-                    <h3>Career Aspirations</h3>
-                    <p>I aspire to become a data scientist specializing in predictive analytics and machine learning applications. I am particularly interested in applying data science methodologies to solve real-world problems in finance, healthcare, and technology sectors.</p>
-                    
-                    <h3>Professional Interests</h3>
-                    <p>My professional interests include:</p>
-                    <ul>
-                        <li>Machine Learning & Predictive Modeling</li>
-                        <li>Financial Analytics & Algorithmic Trading</li>
-                        <li>Data Visualization & Dashboard Development</li>
-                        <li>Statistical Analysis & Experimental Design</li>
-                    </ul>
-                    
-                    <h3>Personal Touch</h3>
-                    <p>Beyond data science, I enjoy exploring new technologies, staying updated with the latest industry trends, and continuously learning through online courses and personal projects. I believe in the power of data to drive meaningful insights and create positive impact.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<div class="game-hero">
+    <p class="game-tagline">Use <span>arrow keys</span> or <span>WASD</span> to navigate &amp; discover my projects</p>
+    <canvas id="gameCanvas"></canvas>
+</div>
 
-    <footer>
-        <p>&copy; 2024 Hidaya Patel. All rights reserved.</p>
-    </footer>
+<!-- Start Screen -->
+<div class="overlay" id="startScreen">
+    <div class="card start-card">
+        <h1>Hi, I'm Hidaya 👋</h1>
+        <p class="sub">Data Science Graduate Student</p>
+        <p class="hint">ARROW KEYS / WASD TO MOVE &nbsp;·&nbsp; TOUCH TO SWIPE</p>
+        <p style="color:#b0b0c8; margin-bottom:1.8rem; font-size:0.93rem;">
+            Navigate the snake to the glowing orbs<br>to discover my projects.
+        </p>
+        <button class="btn btn-pink" onclick="startGame()">Start Exploring</button>
+    </div>
+</div>
+
+<!-- Project Modal -->
+<div class="overlay hidden" id="projectModal">
+    <div class="card">
+        <h2 id="modalTitle"></h2>
+        <p class="type" id="modalType"></p>
+        <p id="modalDesc"></p>
+        <div class="tags" id="modalTags"></div>
+        <div class="btn-row">
+            <a id="modalLink" href="#" target="_blank" class="btn btn-pink">View on GitHub</a>
+            <button class="btn btn-blue" onclick="closeModal()">Continue Playing →</button>
+        </div>
+    </div>
+</div>
+
+<!-- Victory Screen -->
+<div class="overlay hidden" id="victoryScreen">
+    <div class="card victory-card">
+        <h2>You found all my projects! 🎉</h2>
+        <p style="color:#b0b0c8; margin-bottom:1.8rem;">
+            Thanks for exploring my portfolio this way.<br>I'd love to connect!
+        </p>
+        <div class="btn-row" style="justify-content:center;">
+            <a href="resume.html" class="btn btn-blue">View Resume</a>
+            <a href="mailto:hidayaaiyub@gmail.com" class="btn btn-pink">Contact Me</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx    = canvas.getContext('2d');
+    const GRID   = 24;
+    let COLS, ROWS;
+
+    function resizeCanvas() {
+        const maxW = Math.min(window.innerWidth - 40, 720);
+        const maxH = Math.min(window.innerHeight - 110, 540);
+        COLS = Math.floor(maxW / GRID);
+        ROWS = Math.floor(maxH / GRID);
+        canvas.width  = COLS * GRID;
+        canvas.height = ROWS * GRID;
+    }
+    resizeCanvas();
+
+    // ── Projects ────────────────────────────────────────────────
+    const PROJECTS = [
+        {
+            id: 0, label: 'Stock ML',
+            color: '#FFD700', glow: 'rgba(255,215,0,0.5)',
+            relX: 0.15, relY: 0.2,
+            title: 'Stock Price Prediction ML Pipeline',
+            type: 'Machine Learning · Financial Analytics',
+            desc: 'End-to-end ML pipeline for predicting short-term stock price movements. Features 28 engineered technical indicators, model comparison (Logistic Regression, Random Forest, XGBoost), SHAP interpretability, and an interactive Streamlit dashboard.',
+            tags: ['Python', 'XGBoost', 'Scikit-learn', 'SHAP', 'Streamlit'],
+            link: 'https://github.com/HidayaPatel/stock-prediction-streamlit'
+        },
+        {
+            id: 1, label: 'Regression',
+            color: '#00E5FF', glow: 'rgba(0,229,255,0.5)',
+            relX: 0.78, relY: 0.18,
+            title: 'Regression Analysis — Starbucks Sugar Content',
+            type: 'Statistical Analysis · Data Science',
+            desc: 'Regression analysis identifying which nutritional characteristics most impact sugar quantity in Starbucks drinks. Includes model diagnostics, feature significance testing, and data visualizations of key predictors.',
+            tags: ['R', 'Linear Regression', 'Statistical Modeling', 'ggplot2'],
+            link: 'https://github.com/Hids-ap/Regression-Analysis-of-sugar-content-in-Starbucks-drinks'
+        },
+        {
+            id: 2, label: 'K-Means',
+            color: '#69FF47', glow: 'rgba(105,255,71,0.5)',
+            relX: 0.5, relY: 0.72,
+            title: 'K-Means Clustering — COVID-19 Severity in Ontario',
+            type: 'Unsupervised Learning · Public Health',
+            desc: 'Applied K-Means and Hierarchical clustering to categorize and weigh the severity of COVID-19 across Ontario regions. Reveals geographic patterns in pandemic impact and supports resource allocation insights.',
+            tags: ['Python', 'K-Means', 'Hierarchical Clustering', 'Pandas', 'Seaborn'],
+            link: 'https://github.com/Hids-ap/Using-K-means-and-Hierarchal-clustering-approach-to-weigh-severity-of-COVID-19-in-Ontario'
+        }
+    ];
+
+    function gridPos(p) {
+        return {
+            x: Math.max(1, Math.min(COLS-2, Math.round(p.relX * (COLS-1)))),
+            y: Math.max(1, Math.min(ROWS-2, Math.round(p.relY * (ROWS-1))))
+        };
+    }
+
+    // ── State ────────────────────────────────────────────────────
+    let snake, direction, nextDirection;
+    let gameLoop, gameRunning = false, paused = false;
+    let discovered = new Set();
+    let remaining  = [];
+    let pulse = 0;
+
+    function startGame() {
+        snake         = [
+            { x: Math.floor(COLS/2),   y: Math.floor(ROWS/2) },
+            { x: Math.floor(COLS/2)-1, y: Math.floor(ROWS/2) },
+            { x: Math.floor(COLS/2)-2, y: Math.floor(ROWS/2) }
+        ];
+        direction     = { x:1, y:0 };
+        nextDirection = { x:1, y:0 };
+        discovered    = new Set();
+        remaining     = PROJECTS.map(p => ({ ...p, ...gridPos(p) }));
+        paused        = false;
+        gameRunning   = true;
+
+        ['startScreen','victoryScreen','projectModal'].forEach(id =>
+            document.getElementById(id).classList.add('hidden')
+        );
+
+        clearInterval(gameLoop);
+        gameLoop = setInterval(tick, 130);
+    }
+
+    function tick() {
+        pulse = (pulse + 0.07) % (Math.PI * 2);
+        if (paused) { draw(); return; }
+
+        direction = { ...nextDirection };
+        const head = {
+            x: (snake[0].x + direction.x + COLS) % COLS,
+            y: (snake[0].y + direction.y + ROWS) % ROWS
+        };
+
+        if (snake.some(s => s.x === head.x && s.y === head.y)) {
+            clearInterval(gameLoop);
+            gameRunning = false;
+            setTimeout(startGame, 1200);
+            return;
+        }
+
+        snake.unshift(head);
+
+        const hit = remaining.find(p => p.x === head.x && p.y === head.y);
+        if (hit) {
+            discovered.add(hit.id);
+            remaining = remaining.filter(p => p.id !== hit.id);
+            paused = true;
+            draw();
+            if (remaining.length === 0) {
+                setTimeout(() => document.getElementById('victoryScreen').classList.remove('hidden'), 400);
+            } else {
+                showModal(hit);
+            }
+        } else {
+            snake.pop();
+            draw();
+        }
+    }
+
+    function showModal(project) {
+        document.getElementById('modalTitle').textContent = project.title;
+        document.getElementById('modalType').textContent  = project.type;
+        document.getElementById('modalDesc').textContent  = project.desc;
+        document.getElementById('modalLink').href         = project.link;
+        document.getElementById('modalTags').innerHTML    =
+            project.tags.map(t => `<span class="tag">${t}</span>`).join('');
+        document.getElementById('projectModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('projectModal').classList.add('hidden');
+        paused = false;
+    }
+
+    // ── Draw ──────────────────────────────────────────────────────
+    function draw() {
+        ctx.fillStyle = '#0d0d1a';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Grid dots
+        ctx.fillStyle = 'rgba(255,255,255,0.03)';
+        for (let x = 0; x < COLS; x++)
+            for (let y = 0; y < ROWS; y++)
+                ctx.fillRect(x*GRID + GRID/2 - 1, y*GRID + GRID/2 - 1, 2, 2);
+
+        // Discovered checkmarks
+        PROJECTS.forEach(p => {
+            if (!discovered.has(p.id)) return;
+            const g  = gridPos(p);
+            const cx = g.x*GRID + GRID/2, cy = g.y*GRID + GRID/2;
+            ctx.fillStyle = 'rgba(255,255,255,0.06)';
+            ctx.beginPath(); ctx.arc(cx, cy, GRID/2-4, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = 'rgba(255,255,255,0.28)';
+            ctx.font = '11px Segoe UI'; ctx.textAlign='center'; ctx.textBaseline='middle';
+            ctx.fillText('✓', cx, cy);
+        });
+
+        // Project orbs
+        remaining.forEach(p => {
+            const cx = p.x*GRID + GRID/2, cy = p.y*GRID + GRID/2;
+            const r  = (GRID/2 - 3) + Math.sin(pulse) * 2.2;
+
+            const grad = ctx.createRadialGradient(cx, cy, r*0.2, cx, cy, r*2.8);
+            grad.addColorStop(0, p.glow); grad.addColorStop(1, 'transparent');
+            ctx.fillStyle = grad;
+            ctx.beginPath(); ctx.arc(cx, cy, r*2.8, 0, Math.PI*2); ctx.fill();
+
+            ctx.shadowColor = p.color; ctx.shadowBlur = 20;
+            ctx.fillStyle = p.color;
+            ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.fill();
+            ctx.shadowBlur = 0;
+
+            ctx.fillStyle = p.color;
+            ctx.font = 'bold 10px Segoe UI';
+            ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+            ctx.fillText(p.label, cx, cy - GRID/2 - 7);
+        });
+
+        // Snake
+        snake.forEach((seg, i) => {
+            const alpha = Math.max(0.18, 1 - (i / snake.length) * 0.78);
+            ctx.fillStyle   = i === 0 ? '#2E86AB' : `rgba(46,134,171,${alpha})`;
+            ctx.shadowColor = i === 0 ? '#2E86AB' : 'transparent';
+            ctx.shadowBlur  = i === 0 ? 14 : 0;
+            ctx.beginPath();
+            ctx.roundRect(seg.x*GRID+2, seg.y*GRID+2, GRID-4, GRID-4, i===0?5:3);
+            ctx.fill();
+        });
+        ctx.shadowBlur = 0;
+
+        // Progress counter
+        ctx.fillStyle = 'rgba(255,255,255,0.22)';
+        ctx.font = '11px Segoe UI'; ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+        ctx.fillText(`Projects discovered: ${discovered.size} / ${PROJECTS.length}`, 10, canvas.height - 8);
+    }
+
+    // ── Controls ──────────────────────────────────────────────────
+    document.addEventListener('keydown', e => {
+        if (!gameRunning || paused) return;
+        switch (e.key) {
+            case 'ArrowUp':    case 'w': case 'W':
+                if (direction.y !==  1) nextDirection = {x:0,  y:-1}; break;
+            case 'ArrowDown':  case 's': case 'S':
+                if (direction.y !== -1) nextDirection = {x:0,  y: 1}; break;
+            case 'ArrowLeft':  case 'a': case 'A':
+                if (direction.x !==  1) nextDirection = {x:-1, y: 0}; break;
+            case 'ArrowRight': case 'd': case 'D':
+                if (direction.x !== -1) nextDirection = {x: 1, y: 0}; break;
+        }
+        if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) e.preventDefault();
+    });
+
+    // Touch / swipe
+    let touchStart = null;
+    canvas.addEventListener('touchstart', e => { touchStart = e.touches[0]; }, {passive:true});
+    canvas.addEventListener('touchend', e => {
+        if (!touchStart || !gameRunning || paused) return;
+        const dx = e.changedTouches[0].clientX - touchStart.clientX;
+        const dy = e.changedTouches[0].clientY - touchStart.clientY;
+        if (Math.abs(dx) > Math.abs(dy)) {
+            if (dx >  20 && direction.x !== -1) nextDirection = {x: 1, y:0};
+            if (dx < -20 && direction.x !==  1) nextDirection = {x:-1, y:0};
+        } else {
+            if (dy >  20 && direction.y !== -1) nextDirection = {x:0, y: 1};
+            if (dy < -20 && direction.y !==  1) nextDirection = {x:0, y:-1};
+        }
+        touchStart = null;
+    }, {passive:true});
+
+    // Initial render
+    ctx.fillStyle = '#0d0d1a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+</script>
 </body>
 </html>
