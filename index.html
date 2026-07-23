@@ -4,130 +4,243 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hidaya Patel — Data Scientist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', Arial, sans-serif; background: #fefae0; color: #283618; }
 
+    body {
+      font-family: 'DM Sans', 'Segoe UI', Arial, sans-serif;
+      background: #fefae0;
+      color: #283618;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Navbar ── */
     nav {
       background: #283618;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 40px;
-      height: 62px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      padding: 0 44px;
+      height: 58px;
+      flex-shrink: 0;
+      z-index: 10;
     }
     .nav-logo {
       color: #fefae0;
-      font-size: 1.2rem;
-      font-weight: 800;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
       text-decoration: none;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
     }
-    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
     .nav-links a {
       color: #dda15e;
       text-decoration: none;
-      font-weight: 600;
-      font-size: 0.95rem;
+      font-weight: 500;
+      font-size: 0.92rem;
+      letter-spacing: 0.3px;
       transition: color 0.2s;
     }
-    .nav-links a:hover, .nav-links a.active { color: #bc6c25; }
+    .nav-links a:hover { color: #bc6c25; }
 
+    /* ── Hero — full remaining height ── */
     .hero {
-      background: #283618;
-      padding: 80px 40px 70px;
-      text-align: center;
-    }
-    .hero-label {
-      color: #bc6c25;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      margin-bottom: 22px;
-    }
-    .hero h1 {
-      color: #fefae0;
-      font-size: clamp(1.8rem, 4vw, 3rem);
-      font-weight: 800;
-      line-height: 1.2;
-      margin-bottom: 28px;
-      max-width: 760px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .hero-bio {
-      color: rgba(254,250,224,0.8);
-      font-size: 1.05rem;
-      line-height: 1.75;
-      max-width: 700px;
-      margin: 0 auto 48px;
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 0 8vw;
+      overflow: hidden;
+      background: #fefae0;
     }
 
-    .stats-row {
+    /* ── Corner stats ── */
+    .corner {
+      position: absolute;
       display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      justify-content: center;
-      margin-bottom: 48px;
+      flex-direction: column;
+      gap: 4px;
     }
-    .stat-box {
-      background: rgba(96,108,56,0.3);
-      border: 1px solid #606c38;
-      border-radius: 12px;
-      padding: 22px 32px;
-      min-width: 120px;
-      text-align: center;
-    }
-    .stat-number {
-      color: #dda15e;
-      font-size: 2rem;
-      font-weight: 800;
+    .corner-tl { top: 40px;    left: 44px;  text-align: left; }
+    .corner-tr { top: 40px;    right: 44px; text-align: right; }
+    .corner-bl { bottom: 44px; left: 44px;  text-align: left; }
+    .corner-br { bottom: 44px; right: 44px; text-align: right; }
+
+    .corner-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 900;
+      color: #bc6c25;
       line-height: 1;
-      margin-bottom: 6px;
     }
-    .stat-label {
-      color: rgba(254,250,224,0.5);
-      font-size: 0.78rem;
+    .corner-label {
+      font-size: 0.72rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.15em;
+      color: #606c38;
+    }
+    .corner-sub {
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: #8a9a6a;
+      letter-spacing: 0.02em;
+      margin-top: 2px;
     }
 
-    .cta-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-    .cta-btn {
+    /* ── Decorative thin lines from corners ── */
+    .corner-tl::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, #dda15e, transparent);
+      margin-top: 10px;
+    }
+    .corner-bl::before {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to top, #dda15e, transparent);
+      margin-bottom: 10px;
+    }
+    .corner-tr::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, #dda15e, transparent);
+      margin-top: 10px;
+      margin-left: auto;
+    }
+    .corner-br::before {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to top, #dda15e, transparent);
+      margin-bottom: 10px;
+      margin-left: auto;
+    }
+
+    /* ── Main content ── */
+    .main-content {
+      max-width: 680px;
+      z-index: 1;
+    }
+
+    .about-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #bc6c25;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .about-label::after {
+      content: '';
       display: inline-block;
+      width: 40px;
+      height: 1px;
+      background: #bc6c25;
+    }
+
+    .hero-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1.15;
+      color: #283618;
+      margin-bottom: 28px;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-bio {
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.85;
+      color: #4a5e30;
+      max-width: 580px;
+      margin-bottom: 40px;
+    }
+
+    .cta-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
       background: #bc6c25;
       color: #fefae0;
-      text-decoration: none;
-      border-radius: 50px;
-      padding: 14px 32px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
       font-weight: 700;
-      font-size: 1rem;
-      box-shadow: 0 4px 20px rgba(188,108,37,0.4);
-      transition: background 0.2s, transform 0.2s;
-    }
-    .cta-btn:hover { background: #a85a1e; transform: translateY(-2px); }
-    .cta-or { color: rgba(254,250,224,0.45); font-size: 0.85rem; }
-    .cta-resume {
-      color: #dda15e;
+      padding: 15px 32px;
+      border-radius: 50px;
       text-decoration: none;
-      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      transition: background 0.25s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 18px rgba(188,108,37,0.35);
+      letter-spacing: 0.02em;
+    }
+    .cta-btn:hover {
+      background: #a05518;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(188,108,37,0.4);
+    }
+    .cta-arrow {
+      font-size: 1.1rem;
+      transition: transform 0.2s;
+    }
+    .cta-btn:hover .cta-arrow { transform: translateX(4px); }
+
+    .or-link {
+      font-size: 0.88rem;
+      color: #8a9a6a;
+    }
+    .or-link a {
+      color: #606c38;
       font-weight: 600;
+      text-decoration: none;
+      border-bottom: 1px solid #dda15e;
+      padding-bottom: 1px;
       transition: color 0.2s;
     }
-    .cta-resume:hover { color: #bc6c25; }
+    .or-link a:hover { color: #bc6c25; }
 
-    footer {
-      background: #283618;
-      border-top: 1px solid #606c38;
-      text-align: center;
-      padding: 22px 20px;
-      color: #606c38;
-      font-size: 0.85rem;
+    /* ── Subtle background decoration ── */
+    .bg-circle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .bg-c1 {
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, rgba(188,108,37,0.07) 0%, transparent 70%);
+      top: -80px; right: 10%;
+    }
+    .bg-c2 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(96,108,56,0.06) 0%, transparent 70%);
+      bottom: 0; left: 30%;
     }
   </style>
 </head>
@@ -136,47 +249,68 @@
   <nav>
     <a href="index.html" class="nav-logo">Hidaya Patel</a>
     <ul class="nav-links">
-      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="index.html">Home</a></li>
       <li><a href="resume.html">Resume</a></li>
     </ul>
   </nav>
 
   <section class="hero">
-    <p class="hero-label">About Me</p>
-    <h1>Data Scientist. Storyteller. World Record Holder.</h1>
-    <p class="hero-bio">
-      I'm a Data Scientist who speaks both the language of business and the language of data. With 2+ years of analytical experience, I specialize in customer analytics, experimentation, and machine learning while bridging the gap between stakeholders and technology. Fluent in English, French, Arabic, and Hindi, I also have a creative side and occasionally enjoy fashion modeling — proving that analytics and aesthetics can coexist. Proud Guinness World Record holder and active community contributor.
-    </p>
 
-    <div class="stats-row">
-      <div class="stat-box">
-        <div class="stat-number">2+</div>
-        <div class="stat-label">Years Experience</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-number">4</div>
-        <div class="stat-label">Languages Spoken</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-number">🏆</div>
-        <div class="stat-label">Guinness World Record</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-number">3+</div>
-        <div class="stat-label">ML Projects</div>
+    <!-- Background circles -->
+    <div class="bg-circle bg-c1"></div>
+    <div class="bg-circle bg-c2"></div>
+
+    <!-- Top-left corner: Years -->
+    <div class="corner corner-tl">
+      <span class="corner-num">2+</span>
+      <span class="corner-label">Years Experience</span>
+    </div>
+
+    <!-- Top-right corner: Languages -->
+    <div class="corner corner-tr">
+      <span class="corner-num">4</span>
+      <span class="corner-label">Languages Spoken</span>
+      <span class="corner-sub">English &middot; French &middot; Arabic &middot; Hindi</span>
+    </div>
+
+    <!-- Bottom-left corner: Guinness -->
+    <div class="corner corner-bl">
+      <span class="corner-num">&#x1F3C6;</span>
+      <span class="corner-label">Guinness World Record</span>
+    </div>
+
+    <!-- Bottom-right corner: Projects -->
+    <div class="corner corner-br">
+      <span class="corner-num">3+</span>
+      <span class="corner-label">ML Projects</span>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+      <p class="about-label">About Me</p>
+      <h1 class="hero-heading">
+        Data Scientist.<br>
+        Storyteller.<br>
+        World Record Holder.
+      </h1>
+      <p class="hero-bio">
+        I'm a Data Scientist who speaks both the language of business and the language of data.
+        With 2+ years of analytical experience, I specialize in customer analytics, experimentation,
+        and machine learning while bridging the gap between stakeholders and technology.
+        Fluent in English, French, Arabic, and Hindi, I also have a creative side and occasionally
+        enjoy fashion modeling — proving that analytics and aesthetics can coexist.
+        Proud Guinness World Record holder and active community contributor.
+      </p>
+      <div class="cta-row">
+        <a href="game.html" class="cta-btn">
+          Play the Game to Discover My Projects
+          <span class="cta-arrow">&rarr;</span>
+        </a>
+        <span class="or-link">or <a href="resume.html">View my Resume</a></span>
       </div>
     </div>
 
-    <div class="cta-wrap">
-      <a href="game.html" class="cta-btn">Play the Game to Discover My Projects →</a>
-      <span class="cta-or">or</span>
-      <a href="resume.html" class="cta-resume">View my Resume</a>
-    </div>
   </section>
-
-  <footer>
-    <p>© 2025 Hidaya Patel</p>
-  </footer>
 
 </body>
 </html>
