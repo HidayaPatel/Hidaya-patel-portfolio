@@ -1,97 +1,531 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume - Hidaya Patel</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume — Hidaya Patel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', 'Segoe UI', Arial, sans-serif;
+      background: #fefae0;
+      color: #283618;
+    }
+
+    /* ── Navbar ── */
+    nav {
+      background: #283618;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 44px;
+      height: 58px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo {
+      color: #fefae0;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      color: #dda15e;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.92rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: #bc6c25; }
+
+    /* ── Page layout ── */
+    .page {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 60px 32px 100px;
+    }
+
+    /* ── Header ── */
+    .resume-header {
+      border-bottom: 2px solid #dda15e;
+      padding-bottom: 28px;
+      margin-bottom: 48px;
+    }
+    .resume-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      color: #283618;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+    .resume-title {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #bc6c25;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 20px;
+      font-size: 0.85rem;
+      color: #606c38;
+    }
+    .contact-row a {
+      color: #606c38;
+      text-decoration: none;
+      border-bottom: 1px solid #dda15e;
+      padding-bottom: 1px;
+      transition: color 0.2s;
+    }
+    .contact-row a:hover { color: #bc6c25; }
+    .contact-sep { color: #dda15e; }
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: 48px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #283618;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, #dda15e, transparent);
+    }
+
+    /* ── Summary ── */
+    .summary-block {
+      border-left: 3px solid #bc6c25;
+      padding: 4px 0 4px 20px;
+      font-size: 0.97rem;
+      line-height: 1.8;
+      color: #4a5e30;
+    }
+
+    /* ── Timeline entries ── */
+    .timeline { display: flex; flex-direction: column; gap: 32px; }
+
+    .entry {
+      display: grid;
+      grid-template-columns: 12px 1fr;
+      gap: 0 20px;
+      position: relative;
+    }
+
+    /* Dot + line */
+    .entry-dot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 5px;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #bc6c25;
+      flex-shrink: 0;
+    }
+    .line {
+      width: 2px;
+      flex: 1;
+      background: linear-gradient(to bottom, #dda15e, transparent);
+      margin-top: 4px;
+    }
+
+    .entry-body { padding-bottom: 4px; }
+
+    .entry-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 2px;
+    }
+    .entry-role {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #283618;
+    }
+    .entry-date {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #bc6c25;
+      white-space: nowrap;
+    }
+    .entry-org {
+      font-size: 0.87rem;
+      font-weight: 500;
+      color: #606c38;
+      margin-bottom: 10px;
+    }
+    .entry-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .entry-list li {
+      font-size: 0.88rem;
+      line-height: 1.65;
+      color: #4a5e30;
+      padding-left: 16px;
+      position: relative;
+    }
+    .entry-list li::before {
+      content: '–';
+      position: absolute;
+      left: 0;
+      color: #bc6c25;
+      font-weight: 700;
+    }
+
+    /* ── Education entries (same timeline style) ── */
+    .entry-degree {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #283618;
+    }
+    .entry-field {
+      font-size: 0.85rem;
+      color: #606c38;
+      margin-top: 2px;
+    }
+
+    /* ── Skills ── */
+    .skills-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .skill-tag {
+      background: #283618;
+      color: #fefae0;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 50px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Certifications ── */
+    .cert-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .cert-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.92rem;
+      color: #283618;
+      font-weight: 500;
+    }
+    .cert-icon {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #dda15e;
+      flex-shrink: 0;
+    }
+
+    /* ── Volunteer ── */
+    .vol-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .vol-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .vol-icon {
+      font-size: 1.1rem;
+      margin-top: 1px;
+      flex-shrink: 0;
+    }
+    .vol-text strong {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #283618;
+      display: block;
+    }
+    .vol-text span {
+      font-size: 0.82rem;
+      color: #606c38;
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: #283618;
+      border-top: 1px solid #606c38;
+      text-align: center;
+      padding: 22px;
+      color: #606c38;
+      font-size: 0.85rem;
+    }
+  </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <h1 class="logo">Hidaya Patel</h1>
-            <ul class="nav-menu">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="resume.html" class="active">Resume</a></li>
-                <li><a href="projects.html">Projects</a></li>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Hidaya Patel</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="resume.html" class="active">Resume</a></li>
+    </ul>
+  </nav>
+
+  <div class="page">
+
+    <!-- Header -->
+    <div class="resume-header">
+      <h1 class="resume-name">Hidaya Aiyub</h1>
+      <p class="resume-title">Data Scientist</p>
+      <div class="contact-row">
+        <a href="mailto:hidaya.ayub.jobs@gmail.com">hidaya.ayub.jobs@gmail.com</a>
+        <span class="contact-sep">·</span>
+        <span>+1 647 997 8708</span>
+        <span class="contact-sep">·</span>
+        <a href="https://www.linkedin.com/in/hidayapatel" target="_blank">LinkedIn</a>
+        <span class="contact-sep">·</span>
+        <a href="index.html">Portfolio</a>
+      </div>
+    </div>
+
+    <!-- Profile Summary -->
+    <div class="section">
+      <h2 class="section-title">Profile</h2>
+      <div class="summary-block">
+        Data Scientist with a creative technical touch to storytelling. I can analyze and speak the language
+        of data efficiently. I speak 4 languages: French, Arabic, Hindi, and English. I hold a Guinness
+        World Record and am very active in community involvement.
+      </div>
+    </div>
+
+    <!-- Education -->
+    <div class="section">
+      <h2 class="section-title">Education</h2>
+      <div class="timeline">
+
+        <div class="entry">
+          <div class="entry-dot"><div class="dot"></div><div class="line"></div></div>
+          <div class="entry-body">
+            <div class="entry-top">
+              <span class="entry-degree">MSc. Data Science</span>
+              <span class="entry-date">Jan 2025 – Jun 2026</span>
+            </div>
+            <p class="entry-org">Eastern University, USA</p>
+          </div>
+        </div>
+
+        <div class="entry">
+          <div class="entry-dot"><div class="dot"></div><div class="line"></div></div>
+          <div class="entry-body">
+            <div class="entry-top">
+              <span class="entry-degree">BSc. (Honours) Mathematics &amp; Computer Science</span>
+              <span class="entry-date">Sep 2019 – Apr 2022</span>
+            </div>
+            <p class="entry-org">Trent University, Canada</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Experience -->
+    <div class="section">
+      <h2 class="section-title">Experience</h2>
+      <div class="timeline">
+
+        <div class="entry">
+          <div class="entry-dot"><div class="dot"></div><div class="line"></div></div>
+          <div class="entry-body">
+            <div class="entry-top">
+              <span class="entry-role">Merchant Specialist</span>
+              <span class="entry-date">Sep 2025 – Dec 2025</span>
+            </div>
+            <p class="entry-org">Shopify &mdash; Toronto, Canada</p>
+            <ul class="entry-list">
+              <li>Analyzed 50+ merchant cases weekly to identify root causes across platform, payment, and account issues, improving resolution efficiency.</li>
+              <li>Investigated merchant account and transaction data across internal systems, resolving complex technical and workflow issues while maintaining 93.5% customer satisfaction.</li>
+              <li>Leveraged AI tools to analyze recurring support trends, contributing to knowledge base improvements and reducing troubleshooting time by 20%.</li>
             </ul>
+          </div>
         </div>
-    </nav>
 
-    <section class="resume">
-        <div class="container">
-            <h1>Resume</h1>
-            
-            <div class="resume-section">
-                <h2>Education</h2>
-                <div class="resume-item">
-                    <h3>Master of Science in Data Science</h3>
-                    <p class="institution">Eastern University</p>
-                    <p class="date">Expected Graduation: 2025</p>
-                    <ul>
-                        <li>Relevant Coursework: Machine Learning (DTSC680), Applied Data Science Capstone (DTSC691)</li>
-                        <li>Focus Areas: Predictive Modeling, Statistical Analysis, Data Visualization</li>
-                        <li>Capstone Project: Stock Price Prediction using Machine Learning</li>
-                    </ul>
-                </div>
+        <div class="entry">
+          <div class="entry-dot"><div class="dot"></div><div class="line"></div></div>
+          <div class="entry-body">
+            <div class="entry-top">
+              <span class="entry-role">AI Trainer</span>
+              <span class="entry-date">Dec 2024 – Jun 2025</span>
             </div>
-
-            <div class="resume-section">
-                <h2>Technical Skills</h2>
-                <div class="skills-grid">
-                    <div class="skill-category">
-                        <h3>Programming Languages</h3>
-                        <ul>
-                            <li>Python</li>
-                            <li>SQL</li>
-                            <li>R</li>
-                        </ul>
-                    </div>
-                    <div class="skill-category">
-                        <h3>ML/Data Science</h3>
-                        <ul>
-                            <li>Scikit-learn</li>
-                            <li>XGBoost</li>
-                            <li>TensorFlow</li>
-                            <li>Pandas, NumPy</li>
-                        </ul>
-                    </div>
-                    <div class="skill-category">
-                        <h3>Visualization & Tools</h3>
-                        <ul>
-                            <li>Matplotlib, Seaborn, Plotly</li>
-                            <li>Streamlit</li>
-                            <li>Jupyter Notebook</li>
-                            <li>Git/GitHub</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="resume-section">
-                <h2>Projects</h2>
-                <div class="resume-item">
-                    <h3>Stock Price Prediction ML Pipeline</h3>
-                    <p class="date">December 2024</p>
-                    <ul>
-                        <li>Developed end-to-end machine learning pipeline for predicting stock price movements</li>
-                        <li>Engineered 28 technical indicators using time-series data from 10 years of market history</li>
-                        <li>Trained and compared multiple models (Logistic Regression, Random Forest, XGBoost)</li>
-                        <li>Implemented SHAP analysis for model interpretability</li>
-                        <li>Created interactive Streamlit dashboard for model deployment</li>
-                        <li>Conducted comprehensive backtesting with financial metrics evaluation</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="resume-graphic">
-                <img src="https://via.placeholder.com/800x400/2E86AB/FFFFFF?text=Data+Science+Professional" alt="Data Science Graphic">
-            </div>
+            <p class="entry-org">Data Annotation &amp; Outlier &mdash; Freelance</p>
+          </div>
         </div>
-    </section>
 
-    <footer>
-        <p>&copy; 2024 Hidaya Patel. All rights reserved.</p>
-    </footer>
+        <div class="entry">
+          <div class="entry-dot"><div class="dot"></div><div class="line"></div></div>
+          <div class="entry-body">
+            <div class="entry-top">
+              <span class="entry-role">Enrolment Advisor</span>
+              <span class="entry-date">Oct 2024 – Dec 2024</span>
+            </div>
+            <p class="entry-org">Trent University &mdash; Peterborough, Canada</p>
+            <ul class="entry-list">
+              <li>Delivered high-quality, multi-channel support (phone, email, in-person) to prospective students, resolving complex enquiries with empathy, clarity, and cultural awareness.</li>
+              <li>Utilized CRM systems (Slate, Colleague) and AI-powered tools to enhance communication and improve data quality through cleaning and validation of 1,000+ prospect records.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="entry">
+          <div class="entry-dot"><div class="dot"></div><div class="line"></div></div>
+          <div class="entry-body">
+            <div class="entry-top">
+              <span class="entry-role">Emerging Technologies Specialist</span>
+              <span class="entry-date">Feb 2024 – Aug 2024</span>
+            </div>
+            <p class="entry-org">Ampere &mdash; Lindsay, Canada</p>
+            <ul class="entry-list">
+              <li>Developed and delivered robotics, programming, and Python data analytics workshops to 150+ students, boosting computer assessment scores by 25%.</li>
+              <li>Collaborated with cross-functional teams to design interdisciplinary projects, improving student engagement by 30%.</li>
+              <li>Guided students including Indigenous students from Iqaluit, offering tailored advice based on their fields of study.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="entry">
+          <div class="entry-dot"><div class="dot"></div><div class="line"></div></div>
+          <div class="entry-body">
+            <div class="entry-top">
+              <span class="entry-role">Account Coordinator</span>
+              <span class="entry-date">Oct 2022 – Nov 2023</span>
+            </div>
+            <p class="entry-org">Kenna Technology &mdash; Mississauga, Canada</p>
+            <ul class="entry-list">
+              <li>Supported project management by coordinating timelines, tracking deliverables, and handling administrative follow-ups across multiple teams.</li>
+              <li>Used Excel daily for data analysis, tracking budgets, preparing reports, and performing VLOOKUPs, pivot tables, and data validation.</li>
+              <li>Monitored and maintained project budgets of up to $50K, ensuring accurate updates and reporting to stakeholders.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="entry">
+          <div class="entry-dot"><div class="dot"></div><div class="line"></div></div>
+          <div class="entry-body">
+            <div class="entry-top">
+              <span class="entry-role">Online Data Analyst</span>
+              <span class="entry-date">Nov 2022 – Feb 2023</span>
+            </div>
+            <p class="entry-org">TELUS Digital AI Data Solutions &mdash; Freelance</p>
+          </div>
+        </div>
+
+        <div class="entry">
+          <div class="entry-dot"><div class="dot"></div><div class="line"></div></div>
+          <div class="entry-body">
+            <div class="entry-top">
+              <span class="entry-role">Advancement Services Student Assistant</span>
+              <span class="entry-date">Oct 2019 – Apr 2022</span>
+            </div>
+            <p class="entry-org">Trent University Portfolio Operations &mdash; Peterborough, Canada</p>
+            <ul class="entry-list">
+              <li>Improved data accuracy by 35% in Raiser's Edge NXT while managing 10,000+ donor records through optimized data processes.</li>
+              <li>Utilized advanced Excel functions (VLOOKUP, PIVOT TABLES) to track and analyze major donor account equity, improving reporting efficiency by 25%.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="section">
+      <h2 class="section-title">Skills</h2>
+      <div class="skills-wrap">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">Pandas</span>
+        <span class="skill-tag">SQL</span>
+        <span class="skill-tag">Excel</span>
+        <span class="skill-tag">Power BI</span>
+        <span class="skill-tag">R</span>
+        <span class="skill-tag">Scikit-learn</span>
+        <span class="skill-tag">XGBoost</span>
+        <span class="skill-tag">SHAP</span>
+        <span class="skill-tag">Streamlit</span>
+        <span class="skill-tag">Raiser's Edge NXT</span>
+        <span class="skill-tag">Slate CRM</span>
+        <span class="skill-tag">GitHub</span>
+      </div>
+    </div>
+
+    <!-- Certifications -->
+    <div class="section">
+      <h2 class="section-title">Certifications</h2>
+      <div class="cert-list">
+        <div class="cert-item">
+          <div class="cert-icon"></div>
+          Power BI Certified Data Analyst
+        </div>
+        <div class="cert-item">
+          <div class="cert-icon"></div>
+          Google Data Analytics
+        </div>
+      </div>
+    </div>
+
+    <!-- Volunteer & Achievements -->
+    <div class="section">
+      <h2 class="section-title">Volunteer &amp; Achievements</h2>
+      <div class="vol-list">
+        <div class="vol-item">
+          <span class="vol-icon">&#x1F3C6;</span>
+          <div class="vol-text">
+            <strong>Guinness World Record — Largest Human Mosaic</strong>
+            <span>Record holder &amp; active community contributor</span>
+          </div>
+        </div>
+        <div class="vol-item">
+          <span class="vol-icon">&#x1F393;</span>
+          <div class="vol-text">
+            <strong>Campus Tour Guide</strong>
+            <span>Trent University</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    &copy; 2025 Hidaya Patel
+  </footer>
+
 </body>
 </html>
