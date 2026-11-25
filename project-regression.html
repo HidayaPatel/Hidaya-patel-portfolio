@@ -3,200 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Regression Analysis — Starbucks Sugar Content — Hidaya Patel</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', Arial, sans-serif; background: #fefae0; color: #283618; }
-
-    nav {
-      background: #283618;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 40px;
-      height: 62px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .nav-logo {
-      color: #fefae0;
-      font-size: 1.2rem;
-      font-weight: 800;
-      text-decoration: none;
-      letter-spacing: 0.5px;
-    }
-    .nav-links { display: flex; gap: 28px; list-style: none; }
-    .nav-links a {
-      color: #dda15e;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: #bc6c25; }
-
-    .hero {
-      background: #606c38;
-      padding: 60px 20px;
-      text-align: center;
-    }
-    .back-link {
-      display: inline-block;
-      color: #dda15e;
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-bottom: 20px;
-      transition: color 0.2s;
-    }
-    .back-link:hover { color: #bc6c25; }
-    .hero h1 {
-      color: #fefae0;
-      font-size: clamp(1.5rem, 3.5vw, 2.4rem);
-      font-weight: 800;
-      margin-bottom: 14px;
-      line-height: 1.2;
-    }
-    .hero-subtitle {
-      color: #dda15e;
-      font-size: 1rem;
-      font-weight: 600;
-    }
-
-    .content {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 48px 24px;
-    }
-
-    .content h2 {
-      color: #283618;
-      font-size: 1.4rem;
-      font-weight: 800;
-      margin-bottom: 14px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #606c38;
-    }
-
-    .content p {
-      color: #606c38;
-      font-size: 1rem;
-      line-height: 1.75;
-      margin-bottom: 32px;
-    }
-
-    .content ul {
-      list-style: none;
-      padding: 0;
-      margin-bottom: 32px;
-    }
-    .content ul li {
-      color: #606c38;
-      font-size: 1rem;
-      line-height: 1.7;
-      padding: 8px 0 8px 24px;
-      position: relative;
-      border-bottom: 1px solid rgba(96,108,56,0.2);
-    }
-    .content ul li:last-child { border-bottom: none; }
-    .content ul li::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 8px;
-      height: 8px;
-      background: #bc6c25;
-      border-radius: 50%;
-    }
-
-    .tags-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 40px;
-    }
-    .tag {
-      background: #283618;
-      color: #fefae0;
-      font-size: 0.82rem;
-      font-weight: 600;
-      padding: 6px 16px;
-      border-radius: 20px;
-    }
-
-    .cta-btn {
-      display: inline-block;
-      background: #bc6c25;
-      color: #fefae0;
-      text-decoration: none;
-      border-radius: 8px;
-      padding: 14px 28px;
-      font-weight: 700;
-      font-size: 1rem;
-      transition: background 0.2s, transform 0.2s;
-      box-shadow: 0 4px 16px rgba(188,108,37,0.35);
-    }
-    .cta-btn:hover { background: #a85a1e; transform: translateY(-2px); }
-
-    footer {
-      background: #283618;
-      border-top: 1px solid #606c38;
-      text-align: center;
-      padding: 22px 20px;
-      color: #606c38;
-      font-size: 0.85rem;
-    }
-  </style>
+  <title>Sugar at Starbucks — Hidaya Patel</title>
+  <meta name="description" content="A linear regression in R on what predicts the sugar in 238 Starbucks drinks.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 3'%3E%3Cpath d='M0 0h1v3H0zM2 0h1v2H2zM1 1h1v1H1z' fill='%23151515'/%3E%3Cpath d='M2 2h1v1H2z' fill='%23d91e18'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="ink.css">
+  <link rel="stylesheet" href="case.css">
 </head>
 <body>
-
   <nav>
-    <a href="index.html" class="nav-logo">Hidaya Patel</a>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="resume.html">Resume</a></li>
-    </ul>
+    <a href="index.html" class="me">Hidaya Patel</a>
+    <div><a href="projects.html">30-second version</a><a href="index.html#contact">Contact</a></div>
   </nav>
-
-  <section class="hero">
-    <a href="index.html" class="back-link">&#x2190; Back to Portfolio</a>
-    <h1>Regression Analysis &#x2014; Starbucks Sugar Content</h1>
-    <p class="hero-subtitle">Statistical Analysis &middot; R &middot; Data Science</p>
-  </section>
-
-  <div class="content">
-    <h2>Overview</h2>
-    <p>
-      This project applies linear regression to a comprehensive Starbucks nutritional dataset, investigating which nutritional factors are most strongly associated with sugar content across the menu. Using R and the tidyverse ecosystem, the analysis covers full model specification, diagnostics, residual checks, and feature significance testing. Visualizations built with ggplot2 communicate findings clearly, revealing the top predictors of sugar content and offering insights relevant to menu transparency and dietary awareness.
-    </p>
-
-    <h2>Key Features</h2>
-    <ul>
-      <li>Nutritional factor regression analysis across the full Starbucks menu dataset</li>
-      <li>Full model diagnostics including residual plots and Q-Q analysis</li>
-      <li>Feature significance testing with p-values and confidence intervals</li>
-      <li>Data visualization with ggplot2 for intuitive result communication</li>
-      <li>Identification of top sugar predictors and their relative importance</li>
-    </ul>
-
-    <h2>Tech Stack</h2>
-    <div class="tags-row">
-      <span class="tag">R</span>
-      <span class="tag">Linear Regression</span>
-      <span class="tag">ggplot2</span>
-      <span class="tag">Statistical Modeling</span>
-      <span class="tag">RStudio</span>
-    </div>
-
-    <a href="https://github.com/Hids-ap/Regression-Analysis-of-sugar-content-in-Starbucks-drinks" target="_blank" class="cta-btn">View on GitHub &#x2192;</a>
-  </div>
-
-  <footer>
-    <p>&#169; 2025 Hidaya Patel</p>
-  </footer>
-
+  <header class="hero">
+    <p class="eyebrow"><a href="index.html#sugar">&larr; All projects</a></p>
+    <h1>What drives the sugar in your Starbucks?</h1>
+    <p class="lede">I tested which nutrition facts best predict the sugar in a drink. Three of them do nearly all the work.</p>
+    <canvas data-scene="sugar" role="img" aria-label="360 tiles, 344 black for explained variation and 16 red for unexplained."></canvas>
+    <p class="unit">1 tile = 1/360 of the variation in sugar. Red is what the model leaves unexplained.</p>
+    <div class="stats"><div><b>238</b><span>drinks, after dropping 4 with unknown caffeine</span></div><div><b>95.5%</b><span>of sugar differences explained</span></div><div><b>3</b><span>predictors kept out of 6</span></div><div><b>4.1 g</b><span>residual standard error</span></div></div>
+    <div class="links"><a class="btn" href="https://github.com/Hids-ap/Regression-Analysis-of-sugar-content-in-Starbucks-drinks" target="_blank" rel="noopener">Code and report on GitHub</a></div>
+  </header>
+  <main class="line plain">
+    <section class="stop">
+      <h2>Guess a drink's sugar</h2>
+      <p>Move the sliders and the fitted model estimates the sugar. The ranges match the drinks in the data.</p>
+      <div class="chart sliders">
+        <div>
+          <label for="cal">Calories <output id="calO"></output></label><input type="range" id="cal" min="0" max="510" step="10" value="240">
+          <label for="fat">Total fat <output id="fatO"></output></label><input type="range" id="fat" min="0" max="15" step="0.5" value="3">
+          <label for="fib">Fibre <output id="fibO"></output></label><input type="range" id="fib" min="0" max="8" step="0.5" value="1">
+        </div>
+        <div aria-live="polite"><div class="big" id="sug"></div><div class="cubes" id="cubes" aria-hidden="true"></div><p class="note" id="sugN" style="margin-top:0"></p></div>
+      </div>
+      <p class="eq">sugar = 0.237 &times; calories &minus; 2.68 &times; fat &minus; 2.54 &times; fibre &minus; 3.31</p>
+      <p>Read it this way: at the same calories, a drink with more fat or fibre has less room for sugar.</p>
+    </section>
+    <section class="stop">
+      <h2>Calories lead, fat follows oddly</h2>
+      <p>On its own, fat goes up slightly with sugar. Hold calories steady and the relationship flips to negative, which is why a one-variable chart would mislead you.</p>
+      <div class="chart">
+        <h3>Correlation between pairs of variables</h3>
+        <p class="sub">1 is a perfect straight-line relationship, 0 is none.</p>
+        <div class="bars" id="cor"></div>
+      </div>
+    </section>
+    <section class="stop">
+      <h2>Dropping half the predictors cost almost nothing</h2>
+      <p>I started with six and removed caffeine, saturated fat and trans fat. The simpler model explains nearly as much.</p>
+      <div class="chart scroll">
+        <table>
+          <tr><th>Model</th><th class="num">Predictors</th><th class="num">R&sup2;</th><th class="num">Adjusted R&sup2;</th><th class="num">Residual error</th></tr>
+          <tr><td>All predictors</td><td class="num">6</td><td class="num">0.957</td><td class="num">0.956</td><td class="num">4.08 g</td></tr>
+          <tr><td>Fat, fibre, calories</td><td class="num">3</td><td class="num">0.955</td><td class="num">0.955</td><td class="num">4.13 g</td></tr>
+          <tr><td>With interactions</td><td class="num">6</td><td class="num">0.957</td><td class="num">0.956</td><td class="num">4.06 g</td></tr>
+        </table>
+      </div>
+      <p class="note">I checked residuals, normality and leverage. Three drinks stood out as outliers, and I kept them because nothing suggested they were errors.</p>
+    </section>
+    <section class="stop">
+      <h2>What I'd do differently</h2>
+      <p>Sugar contains calories, so part of this strong fit is arithmetic rather than discovery. My report also ended on a version without an intercept, whose R&sup2; of 0.987 can't be compared with the others, so I show the standard model here.</p>
+      <div class="links"><a class="btn solid" href="project-ttc.html">Next: TTC delays</a></div>
+      <p class="note">Built in R at Trent University, 2022. Starbucks drink menu data from Kaggle.</p>
+    </section>
+  </main>
+  <footer>&copy; 2026 Hidaya Patel</footer>
+  <script src="mosaic.js"></script>
+  <script src="case.js"></script>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    function update() {
+      const c = +$('cal').value, f = +$('fat').value, b = +$('fib').value;
+      $('calO').textContent = c; $('fatO').textContent = f + ' g'; $('fibO').textContent = b + ' g';
+      const raw = .237406 * c - 2.683616 * f - 2.541946 * b - 3.309724, s = Math.max(0, Math.round(raw));
+      $('sug').textContent = s + ' g';
+      $('cubes').replaceChildren(...Array.from({ length: Math.round(s / 4) }, () => el('i')));
+      $('sugN').textContent = raw < 0 ? 'The model goes below zero here, so this mix is outside what it can judge.' : 'of sugar. One red cube is about a teaspoon (4 g).';
+    }
+    ['cal', 'fat', 'fib'].forEach((i) => $(i).addEventListener('input', update));
+    update();
+    [['Calories and sugar', .905], ['Total fat and trans fat', .890], ['Calories and total fat', .619], ['Calories and fibre', .379], ['Total fat and sugar', .305], ['Trans fat and caffeine', .174]].forEach(([k, v]) => {
+      const t = el('div', { class: 'track' }), b = el('div', { class: 'bar', style: `width:${v * 78}%` });
+      hint(b, v.toFixed(2), k);
+      t.append(b, el('span', { class: 'val' }, v.toFixed(2)));
+      $('cor').append(el('span', {}, k), t);
+    });
+  </script>
 </body>
 </html>

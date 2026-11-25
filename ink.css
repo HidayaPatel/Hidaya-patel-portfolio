@@ -1,0 +1,30 @@
+/* Ink: shared by every page of the portfolio */
+:root { color-scheme: light; --paper: #f7f7f5; --ink: #151515; --red: #d91e18; --grey: #7d7d7d; --muted: #595959; --rule: #d4d4cf; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 0; }
+body { font-family: Archivo, 'Helvetica Neue', Arial, sans-serif; background: var(--paper); color: var(--ink); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+::selection { background: var(--red); color: #fff; }
+.skip { position: absolute; left: -999px; top: 8px; z-index: 99; background: var(--ink); color: #fff; padding: 10px 16px; }
+.skip:focus { left: 8px; }
+
+nav { position: fixed; inset: 0 0 auto; height: 64px; padding: 0 48px; display: flex; align-items: center; justify-content: space-between; gap: 20px; background: var(--paper); z-index: 30; }
+nav a { text-decoration: none; font-weight: 600; font-size: .95rem; padding: 10px 0; }
+nav a:hover { color: var(--red); }
+nav .me { font-weight: 800; font-stretch: 112%; }
+nav .me::after { content: ''; display: inline-block; width: 9px; height: 9px; background: var(--red); margin-left: 5px; }
+nav div { display: flex; gap: 28px; }
+
+.links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 12px 22px; border: 2px solid var(--ink); font-weight: 700; font-size: .95rem; text-decoration: none; transition: background .15s, color .15s, border-color .15s; }
+.btn:hover { background: var(--ink); color: #fff; }
+.btn.solid { background: var(--ink); color: #fff; }
+.btn.solid:hover { background: var(--red); border-color: var(--red); }
+
+@media (max-width: 860px) {
+  nav { height: 56px; padding: 0 20px; }
+  nav div { gap: 18px; }
+  nav a { font-size: .88rem; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }

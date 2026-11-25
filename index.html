@@ -4,293 +4,118 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hidaya Patel — Data Scientist</title>
+  <meta name="description" content="Data science projects by Hidaya Patel, told by one crowd of 360 tiles that rebuilds itself into every result.">
+  <meta property="og:title" content="Hidaya Patel — Data Scientist">
+  <meta property="og:description" content="Four data projects, told by one crowd of tiles.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 3'%3E%3Cpath d='M0 0h1v3H0zM2 0h1v2H2zM1 1h1v1H1z' fill='%23151515'/%3E%3Cpath d='M2 2h1v1H2z' fill='%23d91e18'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="ink.css">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'DM Sans', 'Segoe UI', Arial, sans-serif;
-      background: #fefae0;
-      color: #283618;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
+    @media (min-width: 861px) { nav { padding: 0 48px 0 64px; } }
+    .stage { position: fixed; top: 64px; right: 0; width: 60vw; height: calc(100vh - 64px); padding: 24px 40px 40px 0; }
+    .stage canvas { width: 100%; height: 100%; display: block; }
+    .scene { min-height: 100vh; width: 40vw; padding: 110px 16px 64px 64px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
+    .scene h1, .scene h2 { font-size: clamp(2rem, 3.6vw, 3.7rem); font-weight: 800; font-stretch: 112%; line-height: 1.02; letter-spacing: -.02em; text-wrap: balance; margin-bottom: 20px; }
+    .scene p { font-size: 1.06rem; line-height: 1.65; max-width: 40ch; margin-bottom: 16px; }
+    .unit { color: var(--muted); font-size: .9rem !important; }
+    .unit::before { content: ''; display: inline-block; width: 11px; height: 11px; background: var(--ink); margin-right: 9px; }
+    .rail { position: fixed; left: 18px; top: 50%; transform: translateY(-50%); display: grid; gap: 2px; z-index: 20; }
+    .rail a { width: 24px; height: 24px; display: grid; place-items: center; }
+    .rail a::before { content: ''; width: 10px; height: 10px; background: #b9b9b4; }
+    .rail a[aria-current]::before { background: var(--red); }
+    @media (max-width: 860px) {
+      .stage { top: 56px; left: 0; width: 100%; height: 44vh; height: 44svh; padding: 8px 16px; background: var(--paper); border-bottom: 2px solid var(--ink); z-index: 10; }
+      .scene { width: 100%; min-height: 100vh; min-height: 100svh; padding: calc(44svh + 84px) 20px 40px; justify-content: flex-start; }
+      .scene h1, .scene h2 { font-size: 1.9rem; margin-bottom: 14px; }
+      .scene p { font-size: 1rem; margin-bottom: 12px; }
+      .rail { display: none; }
     }
-
-    /* ── Navbar ── */
-    nav {
-      background: #283618;
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      padding: 0 44px;
-      height: 58px;
-      flex-shrink: 0;
-      z-index: 10;
-    }
-    .nav-left { display: flex; }
-    .nav-logo {
-      color: #fefae0;
-      font-family: 'Playfair Display', serif;
-      font-size: 1.15rem;
-      font-weight: 700;
-      text-decoration: none;
-      letter-spacing: 0.3px;
-      justify-self: center;
-    }
-    .nav-links { display: flex; gap: 32px; list-style: none; justify-content: flex-end; }
-    .nav-links a {
-      color: #dda15e;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.92rem;
-      letter-spacing: 0.3px;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: #bc6c25; }
-
-    /* ── Hero — full remaining height ── */
-    .hero {
-      flex: 1;
-      position: relative;
-      display: flex;
-      align-items: center;
-      padding: 0 8vw;
-      overflow: hidden;
-      background: #fefae0;
-    }
-
-    /* ── Corner stats ── */
-    .corner {
-      position: absolute;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 6px;
-      border: 1.5px solid #bc6c25;
-      border-radius: 16px;
-      padding: 18px 24px;
-      background: transparent;
-    }
-    .corner-tl { top: 36px;    left: 40px;  text-align: left; }
-    .corner-tr { top: 36px;    right: 40px; text-align: right; align-items: flex-end; }
-    .corner-bl { bottom: 40px; left: 40px;  text-align: left; }
-    .corner-br { bottom: 40px; right: 40px; text-align: right; align-items: flex-end; }
-
-    .corner-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 3.8rem;
-      font-weight: 900;
-      color: #bc6c25;
-      line-height: 1;
-    }
-    .corner-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: #606c38;
-    }
-    .corner-sub {
-      font-size: 0.78rem;
-      font-weight: 400;
-      color: #8a9a6a;
-      letter-spacing: 0.02em;
-    }
-
-    /* ── Main content ── */
-    .main-content {
-      width: 100%;
-      max-width: 640px;
-      z-index: 1;
-      text-align: center;
-      margin: 0 auto;
-    }
-
-    .about-label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: #bc6c25;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-    }
-    .about-label::before,
-    .about-label::after {
-      content: '';
-      display: inline-block;
-      width: 32px;
-      height: 1px;
-      background: #bc6c25;
-    }
-
-    .hero-heading {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.2rem, 4vw, 3.4rem);
-      font-weight: 900;
-      line-height: 1.15;
-      color: #283618;
-      margin-bottom: 24px;
-      letter-spacing: -0.01em;
-    }
-
-    .hero-bio {
-      font-size: 0.97rem;
-      font-weight: 400;
-      line-height: 1.85;
-      color: #4a5e30;
-      margin-bottom: 36px;
-    }
-
-    .cta-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .cta-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.92rem;
-      font-weight: 700;
-      padding: 14px 28px;
-      border-radius: 50px;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: background 0.25s, transform 0.2s, box-shadow 0.2s;
-      letter-spacing: 0.02em;
-    }
-    .cta-btn-primary {
-      background: #bc6c25;
-      color: #fefae0;
-      box-shadow: 0 4px 18px rgba(188,108,37,0.35);
-    }
-    .cta-btn-primary:hover {
-      background: #a05518;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(188,108,37,0.4);
-    }
-    .cta-btn-secondary {
-      background: #283618;
-      color: #fefae0;
-      box-shadow: 0 4px 18px rgba(40,54,24,0.25);
-    }
-    .cta-btn-secondary:hover {
-      background: #1a2410;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(40,54,24,0.3);
-    }
-    .cta-arrow {
-      font-size: 1.05rem;
-      transition: transform 0.2s;
-    }
-    .cta-btn:hover .cta-arrow { transform: translateX(4px); }
-
-    /* ── Subtle background decoration ── */
-    .bg-circle {
-      position: absolute;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .bg-c1 {
-      width: 420px; height: 420px;
-      background: radial-gradient(circle, rgba(188,108,37,0.07) 0%, transparent 70%);
-      top: -80px; right: 10%;
-    }
-    .bg-c2 {
-      width: 300px; height: 300px;
-      background: radial-gradient(circle, rgba(96,108,56,0.06) 0%, transparent 70%);
-      bottom: 0; left: 30%;
+    @media (max-width: 860px) and (max-height: 620px) {
+      .stage { height: 34svh; }
+      .scene { padding-top: calc(34svh + 76px); }
     }
   </style>
 </head>
 <body>
-
+  <a class="skip" href="#ttc">Skip to projects</a>
   <nav>
-    <div class="nav-left">
-      <ul class="nav-links" style="justify-content:flex-start;">
-        <li><a href="index.html">Home</a></li>
-      </ul>
-    </div>
-    <a href="index.html" class="nav-logo">Hidaya Patel</a>
-    <ul class="nav-links">
-      <li><a href="resume.html">Resume</a></li>
-    </ul>
+    <a href="index.html" class="me">Hidaya Patel</a>
+    <div><a href="projects.html">30-second version</a><a href="#contact">Contact</a></div>
   </nav>
 
-  <section class="hero">
+  <div class="rail" aria-hidden="true">
+    <a href="#home" tabindex="-1"></a><a href="#ttc" tabindex="-1"></a><a href="#stock" tabindex="-1"></a><a href="#covid" tabindex="-1"></a><a href="#sugar" tabindex="-1"></a><a href="#contact" tabindex="-1"></a>
+  </div>
 
-    <!-- Background circles -->
-    <div class="bg-circle bg-c1"></div>
-    <div class="bg-circle bg-c2"></div>
+  <div class="stage"><canvas id="crowd" role="img" aria-label="360 tiles spelling Hidaya"></canvas></div>
 
-    <!-- Top-left corner: Years -->
-    <div class="corner corner-tl">
-      <span class="corner-num">2+</span>
-      <span class="corner-label">Years Experience</span>
-    </div>
+  <main>
+    <section class="scene" id="home" data-alt="360 tiles spelling Hidaya">
+      <h1>Every project starts as a crowd of data.</h1>
+      <p>I'm Hidaya Patel, a data scientist. Scroll, and these same 360 tiles rebuild themselves into each result.</p>
+      <div class="links"><a class="btn solid" href="#ttc">See the projects</a><a class="btn" href="projects.html">30-second version</a></div>
+    </section>
 
-    <!-- Top-right corner: Languages -->
-    <div class="corner corner-tr">
-      <span class="corner-num">4</span>
-      <span class="corner-label">Languages Spoken</span>
-      <span class="corner-sub">English &middot; French &middot; Arabic &middot; Hindi</span>
-    </div>
+    <section class="scene" id="ttc" data-alt="Ten columns of tiles. The riskiest hours column holds 24% of delays.">
+      <h2>Can you predict a subway delay?</h2>
+      <p>From 97,227 TTC incidents, my model ranked station-hours by risk. The riskiest tenth held nearly a quarter of all 2026 delays, a year it had never seen.</p>
+      <p class="unit">1 tile = 1/360 of 2026 delays</p>
+      <div class="links"><a class="btn solid" href="project-ttc.html">Read the TTC study</a></div>
+    </section>
 
-    <!-- Bottom-left corner: Guinness -->
-    <div class="corner corner-bl">
-      <span class="corner-num">&#x1F3C6;</span>
-      <span class="corner-label">Guinness World Record</span>
-    </div>
+    <section class="scene" id="stock" data-alt="Four groups of tiles for test days: said up and right 196, said up and wrong 170, said down and right 77, said down and wrong 98.">
+      <h2>Can technical signals beat the market?</h2>
+      <p>No. The red tiles are days the model got wrong, nearly half of them. Always guessing "up" scored higher.</p>
+      <p class="unit">1 tile = about 1.5 test days</p>
+      <div class="links"><a class="btn solid" href="project-stock.html">Read the stock study</a></div>
+    </section>
 
-    <!-- Bottom-right corner: Projects -->
-    <div class="corner corner-br">
-      <span class="corner-num">3+</span>
-      <span class="corner-label">ML Projects</span>
-    </div>
+    <section class="scene" id="covid" data-alt="34 Ontario cities in three groups: Toronto alone, 13 cities, and 20 cities.">
+      <h2>Which cities needed help first?</h2>
+      <p>K-means sorted 34 Ontario cities by COVID-19 outcomes. Toronto was so far ahead it became a group of one, hiding the next hot spots.</p>
+      <p class="unit">10 tiles = 1 city</p>
+      <div class="links"><a class="btn solid" href="project-kmeans.html">Read the COVID-19 study</a></div>
+    </section>
 
-    <!-- Main content -->
-    <div class="main-content">
-      <p class="about-label">About Me</p>
-      <h1 class="hero-heading">
-        Data Scientist.<br>
-        Storyteller.<br>
-        World Record Holder.
-      </h1>
-      <p class="hero-bio">
-        I'm a Data Scientist who speaks both the language of business and the language of data.
-        With 2+ years of analytical experience, I specialize in customer analytics, experimentation,
-        and machine learning while bridging the gap between stakeholders and technology.
-        Fluent in English, French, Arabic, and Hindi, I also have a creative side and occasionally
-        enjoy fashion modeling — proving that analytics and aesthetics can coexist.
-        Proud Guinness World Record holder and active community contributor.
-      </p>
-      <div class="cta-row">
-        <a href="game.html" class="cta-btn cta-btn-primary">
-          Play the Game to Discover My Projects
-          <span class="cta-arrow">&rarr;</span>
-        </a>
-        <a href="resume.html" class="cta-btn cta-btn-secondary">
-          View my Resume
-          <span class="cta-arrow">&rarr;</span>
-        </a>
+    <section class="scene" id="sugar" data-alt="360 tiles, 344 black for explained variation and 16 red for unexplained.">
+      <h2>What drives the sugar in your Starbucks?</h2>
+      <p>Calories, fat and fibre explain 95.5% of the difference in sugar between 238 drinks. The red tiles are what's left.</p>
+      <p class="unit">1 tile = 1/360 of the variation</p>
+      <div class="links"><a class="btn solid" href="project-regression.html">Read the Starbucks study</a></div>
+    </section>
+
+    <section class="scene" id="contact" data-alt="Three bands of tiles for email, LinkedIn and GitHub">
+      <h2>Have data that needs a story?</h2>
+      <p>Tell me what you're trying to find out.</p>
+      <div class="links">
+        <a class="btn solid" href="mailto:hidaya.ayub.jobs@gmail.com">Email me</a>
+        <a class="btn" href="https://www.linkedin.com/in/hidayapatel" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="https://github.com/HidayaPatel" target="_blank" rel="noopener">GitHub</a>
       </div>
-    </div>
+    </section>
+  </main>
 
-  </section>
-
+  <script src="mosaic.js"></script>
+  <script>
+    const canvas = document.getElementById('crowd');
+    const crowd = Mosaic.mount(canvas, 'home');
+    const scenes = [...document.querySelectorAll('.scene')], rail = [...document.querySelectorAll('.rail a')];
+    let active = '';
+    function update() {
+      const mid = innerHeight * .55;
+      const s = scenes.findLast((x) => x.getBoundingClientRect().top <= mid) || scenes[0];
+      if (s.id === active) return;
+      active = s.id;
+      crowd.go(s.id);
+      canvas.setAttribute('aria-label', s.dataset.alt);
+      rail.forEach((a) => a.hash === '#' + s.id ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current'));
+    }
+    addEventListener('scroll', update, { passive: true });
+    addEventListener('resize', update);
+    update();
+  </script>
 </body>
 </html>

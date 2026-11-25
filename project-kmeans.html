@@ -3,213 +3,84 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>K-Means Clustering — COVID-19 Ontario — Hidaya Patel</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', Arial, sans-serif; background: #fefae0; color: #283618; }
-
-    nav {
-      background: #283618;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 40px;
-      height: 62px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .nav-logo {
-      color: #fefae0;
-      font-size: 1.2rem;
-      font-weight: 800;
-      text-decoration: none;
-      letter-spacing: 0.5px;
-    }
-    .nav-links { display: flex; gap: 28px; list-style: none; }
-    .nav-links a {
-      color: #dda15e;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: #bc6c25; }
-
-    .hero {
-      background: #283618;
-      padding: 60px 20px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(96,108,56,0.25) 0%, rgba(40,54,24,0) 60%);
-      pointer-events: none;
-    }
-    .back-link {
-      display: inline-block;
-      color: #dda15e;
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-bottom: 20px;
-      transition: color 0.2s;
-      position: relative;
-    }
-    .back-link:hover { color: #bc6c25; }
-    .hero h1 {
-      color: #fefae0;
-      font-size: clamp(1.5rem, 3.5vw, 2.4rem);
-      font-weight: 800;
-      margin-bottom: 14px;
-      line-height: 1.2;
-      position: relative;
-    }
-    .hero-subtitle {
-      color: #dda15e;
-      font-size: 1rem;
-      font-weight: 600;
-      position: relative;
-    }
-
-    .content {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 48px 24px;
-    }
-
-    .content h2 {
-      color: #283618;
-      font-size: 1.4rem;
-      font-weight: 800;
-      margin-bottom: 14px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #606c38;
-    }
-
-    .content p {
-      color: #606c38;
-      font-size: 1rem;
-      line-height: 1.75;
-      margin-bottom: 32px;
-    }
-
-    .content ul {
-      list-style: none;
-      padding: 0;
-      margin-bottom: 32px;
-    }
-    .content ul li {
-      color: #606c38;
-      font-size: 1rem;
-      line-height: 1.7;
-      padding: 8px 0 8px 24px;
-      position: relative;
-      border-bottom: 1px solid rgba(96,108,56,0.2);
-    }
-    .content ul li:last-child { border-bottom: none; }
-    .content ul li::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 8px;
-      height: 8px;
-      background: #bc6c25;
-      border-radius: 50%;
-    }
-
-    .tags-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 40px;
-    }
-    .tag {
-      background: #283618;
-      color: #fefae0;
-      font-size: 0.82rem;
-      font-weight: 600;
-      padding: 6px 16px;
-      border-radius: 20px;
-    }
-
-    .cta-btn {
-      display: inline-block;
-      background: #bc6c25;
-      color: #fefae0;
-      text-decoration: none;
-      border-radius: 8px;
-      padding: 14px 28px;
-      font-weight: 700;
-      font-size: 1rem;
-      transition: background 0.2s, transform 0.2s;
-      box-shadow: 0 4px 16px rgba(188,108,37,0.35);
-    }
-    .cta-btn:hover { background: #a85a1e; transform: translateY(-2px); }
-
-    footer {
-      background: #283618;
-      border-top: 1px solid #606c38;
-      text-align: center;
-      padding: 22px 20px;
-      color: #606c38;
-      font-size: 0.85rem;
-    }
-  </style>
+  <title>COVID-19 in Ontario — Hidaya Patel</title>
+  <meta name="description" content="Clustering 34 Ontario cities by COVID-19 outcomes with K-means and hierarchical clustering in R.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 3'%3E%3Cpath d='M0 0h1v3H0zM2 0h1v2H2zM1 1h1v1H1z' fill='%23151515'/%3E%3Cpath d='M2 2h1v1H2z' fill='%23d91e18'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="ink.css">
+  <link rel="stylesheet" href="case.css">
 </head>
 <body>
-
   <nav>
-    <a href="index.html" class="nav-logo">Hidaya Patel</a>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="resume.html">Resume</a></li>
-    </ul>
+    <a href="index.html" class="me">Hidaya Patel</a>
+    <div><a href="projects.html">30-second version</a><a href="index.html#contact">Contact</a></div>
   </nav>
-
-  <section class="hero">
-    <a href="index.html" class="back-link">&#x2190; Back to Portfolio</a>
-    <h1>K-Means Clustering &#x2014; COVID-19 Severity in Ontario</h1>
-    <p class="hero-subtitle">Unsupervised Learning &middot; Public Health Analytics &middot; Python</p>
-  </section>
-
-  <div class="content">
-    <h2>Overview</h2>
-    <p>
-      This project applies K-Means and Hierarchical clustering algorithms to COVID-19 case data across Ontario public health regions, with the goal of categorizing areas by severity and informing resource allocation decisions. Using Python's data science ecosystem, regional case metrics are clustered to reveal geographic patterns in outbreak intensity. Cluster profiles are visualized with Seaborn, and the dendrogram from hierarchical clustering validates the K-Means groupings. The insights support evidence-based public health planning by identifying which regions required the most urgent intervention.
-    </p>
-
-    <h2>Key Features</h2>
-    <ul>
-      <li>K-Means clustering for regional severity categorization across Ontario public health units</li>
-      <li>Hierarchical clustering for dendrogram-based validation of cluster structure</li>
-      <li>Geographic severity mapping across Ontario regions</li>
-      <li>Visual cluster analysis with Seaborn heatmaps and scatter plots</li>
-      <li>Resource allocation insights derived from distinct cluster profiles</li>
-    </ul>
-
-    <h2>Tech Stack</h2>
-    <div class="tags-row">
-      <span class="tag">Python</span>
-      <span class="tag">K-Means</span>
-      <span class="tag">Hierarchical Clustering</span>
-      <span class="tag">Pandas</span>
-      <span class="tag">Seaborn</span>
-      <span class="tag">Scikit-learn</span>
-    </div>
-
-    <a href="https://github.com/Hids-ap/Using-K-means-and-Hierarchal-clustering-approach-to-weigh-severity-of-COVID-19-in-Ontario" target="_blank" class="cta-btn">View on GitHub &#x2192;</a>
-  </div>
-
-  <footer>
-    <p>&#169; 2025 Hidaya Patel</p>
-  </footer>
-
+  <header class="hero">
+    <p class="eyebrow"><a href="index.html#covid">&larr; All projects</a></p>
+    <h1>Which Ontario cities needed help first?</h1>
+    <p class="lede">My undergraduate research project grouped 34 Ontario cities by three counts: resolved, not resolved and fatal cases. The most useful thing I did was remove one city.</p>
+    <canvas data-scene="covid" role="img" aria-label="34 Ontario cities in three groups: Toronto alone, 13 cities, and 20 cities."></canvas>
+    <p class="unit">10 tiles = 1 city. Groups are from K-means with three clusters. The last row of pale tiles is spare.</p>
+    <div class="stats"><div><b>34</b><span>cities in the data</span></div><div><b>3</b><span>case counts per city, scaled</span></div><div><b>2</b><span>clustering methods compared</span></div><div><b>16</b><span>cities grouped together in every run</span></div></div>
+    <div class="links"><a class="btn" href="https://github.com/Hids-ap/Using-K-means-and-Hierarchal-clustering-approach-to-weigh-severity-of-COVID-19-in-Ontario" target="_blank" rel="noopener">Code and report on GitHub</a></div>
+  </header>
+  <main class="line plain">
+    <section class="stop">
+      <h2>One outlier was hiding the next hot spots</h2>
+      <p>With Toronto in the data, K-means gave it a group of its own and lumped Mississauga and Newmarket in with eleven other cities. Remove Toronto, and those two stand apart as the next highest.</p>
+      <div class="chart">
+        <h3>Switch between runs to see who moves</h3>
+        <p class="sub">Groups as listed in my report, highest case counts first.</p>
+        <div class="picker" id="picker"></div>
+        <div class="groups" id="groups" aria-live="polite"></div>
+      </div>
+    </section>
+    <section class="stop">
+      <h2>The two methods disagreed</h2>
+      <p>Hierarchical clustering put 30 cities in one group, mixing places with high and low counts, so I judged it less accurate here. It did single out <strong>Ottawa</strong>, which K-means left in the middle group. I named four places for the tightest measures: Toronto, Mississauga, Newmarket and Ottawa.</p>
+      <p>I chose three clusters using the elbow and silhouette methods. With Toronto removed and four clusters allowed, both methods gave identical groups.</p>
+    </section>
+    <section class="stop">
+      <h2>What I'd do differently</h2>
+      <p>These are total counts, not rates. Bigger cities record more cases, so part of what the clusters measure is population. I'd redo this per 100,000 people before anyone based a policy on it.</p>
+      <div class="links"><a class="btn solid" href="project-regression.html">Next: sugar at Starbucks</a></div>
+      <p class="note">Built in R with factoextra for MATH 4800 at Trent University, 2022. Data from the Ontario Data Catalogue.</p>
+    </section>
+  </main>
+  <footer>&copy; 2026 Hidaya Patel</footer>
+  <script src="mosaic.js"></script>
+  <script src="case.js"></script>
+  <script>
+    const same = ['Stratford', 'St. Thomas', 'Simcoe St.', 'Port Hope', 'Point Edward', 'Peterborough', 'Pembroke', 'Owen Sound', 'North Bay', 'New Liskeard', 'Guelph', 'Cornwall', 'Chatham', 'Brockville', 'Brantford', 'Belleville'];
+    const mid = ['Barrie', 'Hamilton', 'London', 'Oakville', 'Windsor', 'Thorold', 'Waterloo', 'Whitby'];
+    const north = ['Kenora', 'Kingston', 'Sault Ste. Marie', 'Sudbury', 'Thunder Bay', 'Timmins'];
+    const RUNS = {
+      'K-means': [['Toronto'], ['Mississauga', 'Newmarket', 'Ottawa', ...mid, 'Kingston', 'Sudbury'], ['Timmins', 'Thunder Bay', 'Sault Ste. Marie', 'Kenora', ...same]],
+      'K-means, no Toronto': [['Mississauga', 'Newmarket'], ['Ottawa', ...mid, 'Kenora', 'Kingston', 'Sault Ste. Marie', 'Sudbury', 'Thunder Bay'], ['Timmins', ...same]],
+      'Four groups, no Toronto': [['Mississauga', 'Newmarket'], ['Ottawa', ...mid], north, same],
+      'Hierarchical': [['Toronto'], ['Newmarket', 'Mississauga', 'Ottawa'], [...mid, ...north, ...same]],
+      'Hierarchical, no Toronto': [['Mississauga'], ['Ottawa', 'Newmarket'], [...mid, ...north, ...same]],
+    };
+    const picker = document.getElementById('picker'), out = document.getElementById('groups');
+    function show(name) {
+      [...picker.children].forEach((b) => b.setAttribute('aria-pressed', b.textContent === name));
+      const run = RUNS[name];
+      out.replaceChildren(...run.map((list, i) => {
+        const d = el('div', { class: 'g' + (i === run.length - 1 && i === 3 ? 3 : i) });
+        const u = el('ul');
+        list.forEach((c) => u.append(el('li', {}, c)));
+        d.append(el('h4', {}, `Group ${i + 1}: ${list.length} ${list.length === 1 ? 'city' : 'cities'}`), u);
+        return d;
+      }));
+    }
+    Object.keys(RUNS).forEach((n) => {
+      const b = el('button', { type: 'button' }, n);
+      b.addEventListener('click', () => show(n));
+      picker.append(b);
+    });
+    show('K-means');
+  </script>
 </body>
 </html>

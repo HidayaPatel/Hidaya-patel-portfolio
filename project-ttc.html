@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TTC Subway Delays — Hidaya Patel</title>
+  <meta name="description" content="Predicting Toronto subway delay risk from 97,227 TTC incidents and hourly weather, tested on unseen 2026 data.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 3'%3E%3Cpath d='M0 0h1v3H0zM2 0h1v2H2zM1 1h1v1H1z' fill='%23151515'/%3E%3Cpath d='M2 2h1v1H2z' fill='%23d91e18'/%3E%3C/svg%3E">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="ink.css">
+  <link rel="stylesheet" href="case.css">
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="me">Hidaya Patel</a>
+    <div><a href="projects.html">30-second version</a><a href="index.html#contact">Contact</a></div>
+  </nav>
+
+  <header class="hero">
+    <p class="eyebrow"><a href="index.html#ttc">&larr; All projects</a></p>
+    <h1>Can you predict a subway delay?</h1>
+    <p class="lede">I took every incident Toronto's subway logged from January 2023 to September 2026, joined it with hourly weather, and built a model of delay risk by station and hour. Then I tested it on a year it had never seen.</p>
+    <canvas data-scene="ttc" role="img" aria-label="Ten columns of tiles. The riskiest hours column holds 24% of delays."></canvas>
+    <p class="unit">1 tile = 1/360 of 2026 delays. Red is the riskiest tenth of station-hours.</p>
+    <div class="stats">
+      <div><b>97,227</b><span>incidents cleaned and analysed</span></div>
+      <div><b>258,904</b><span>delay minutes, closures excluded</span></div>
+      <div><b>6x</b><span>delay rate in the riskiest tenth of station-hours vs the safest</span></div>
+      <div><b>0.645</b><span>AUC on unseen 2026 data (0.5 is a coin flip)</span></div>
+    </div>
+    <div class="links">
+      <a class="btn solid" href="https://ttc-delay-risk-hidaya.streamlit.app/" target="_blank" rel="noopener">Try the live app</a>
+      <a class="btn" href="https://github.com/HidayaPatel/ttc-delay-predictor" target="_blank" rel="noopener">Code on GitHub</a>
+    </div>
+    <p class="note">The app sleeps when nobody is using it. If you see a sleep screen, press the wake-up button and give it a moment.</p>
+  </header>
+
+  <main class="line">
+    <section class="stop">
+      <h2>When: opening time and the evening rush</h2>
+      <p>Delays cluster when service starts and again from 4 to 6pm, strongest Tuesday to Thursday. The darkest square is <strong>Sunday at 8am</strong>, when the Sunday service opens.</p>
+      <div class="chart">
+        <h3>Average delays by day and hour</h3>
+        <p class="sub">Any delay over 0 minutes, whole network. Hover or tab to a square for its value.</p>
+        <div class="heat" id="heat"></div>
+        <div class="ramp"><span>0</span><i></i><span>2.6 per hour</span></div>
+        <details><summary>View as a table</summary><div id="heatTable"></div></details>
+      </div>
+    </section>
+
+    <section class="stop">
+      <h2>Where: interchanges and the ends of the line</h2>
+      <p><strong>Bloor-Yonge</strong> lost the most time, 12,175 minutes. Kennedy, St George and Kipling follow: places where lines meet or trains turn around.</p>
+      <div class="chart">
+        <h3>Total delay minutes by station</h3>
+        <p class="sub">Larger circle, more minutes lost. Schematic layout, not to scale. Line 3, which closed in July 2023, is left off the map.</p>
+        <div class="scroll map" tabindex="0" aria-label="Station map, scrolls sideways on small screens"><svg id="map" viewBox="-6 -10 1012 560" role="group" aria-label="Schematic map of subway stations sized by delay minutes"></svg></div>
+        <details><summary>View as a table</summary><div id="mapTable"></div></details>
+      </div>
+    </section>
+
+    <section class="stop">
+      <h2>Why: mostly people, not trains</h2>
+      <p>Two thirds of lost time comes from passenger, security and miscellaneous incidents, such as ill customers, disorderly passengers and people at track level. Train equipment is only 8%.</p>
+      <div class="chart">
+        <h3>Share of delay minutes by cause</h3>
+        <p class="sub">Grouped from TTC delay codes. The TTC's miscellaneous codes are mostly passenger incidents but include some others.</p>
+        <div class="bars" id="causes"></div>
+      </div>
+    </section>
+
+    <section class="stop">
+      <h2>Cleaning: 1,687 spellings, 75 stations</h2>
+      <p>Station is typed by hand and cut off at 22 characters. I matched each entry to a real station by its longest known prefix and mapped renamed stations to their current name, which placed <strong>96% of incidents</strong>.</p>
+      <div class="chart">
+        <h3>Pick a station to see what the raw data looked like</h3>
+        <p class="sub">The ten most common raw spellings for each.</p>
+        <div class="picker" id="picker"></div>
+        <div class="merge"><div class="messy" id="messy"></div><div class="to" aria-hidden="true">&rarr;</div><div class="clean" id="clean" aria-live="polite"></div></div>
+      </div>
+      <div class="chart">
+        <table>
+          <tr><th>Problem in the raw data</th><th>What I did</th></tr>
+          <tr><td>65% of incidents have a 0-minute delay</td><td>Kept them as logged events, not delays</td></tr>
+          <tr><td>Planned closures logged as one very long "delay"</td><td>Flagged and excluded from delay statistics</td></tr>
+          <tr><td>Dundas and Eglinton West renamed mid-period</td><td>Mapped to TMU and Cedarvale</td></tr>
+          <tr><td>Line field has 40+ spellings</td><td>Rule-based normalisation</td></tr>
+          <tr><td>104 duplicate rows</td><td>Removed</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section class="stop">
+      <h2>Model: does it hold up on 2026?</h2>
+      <p>The question: at this station, in this hour, will there be a delay of 5 minutes or more? Trained on 1.5 million station-hours from 2023 to 2025, tested on 376,740 from January to September 2026. Only 0.9% of them had a delay, so I scored ranking (AUC), not accuracy.</p>
+      <div class="two">
+        <div class="chart">
+          <h3>AUC on 2026, against simpler baselines</h3>
+          <p class="sub">Bar length is the gain over a coin flip (0.5).</p>
+          <div class="bars" id="auc"></div>
+        </div>
+        <div class="chart">
+          <h3>Real 2026 delay rate by predicted risk</h3>
+          <p class="sub">Station-hours split into ten groups, safest to riskiest.</p>
+          <svg id="deciles" role="group" aria-label="Delay rate by risk group"></svg>
+          <details><summary>View as a table</summary><div id="decTable"></div></details>
+        </div>
+      </div>
+      <p class="note">The riskiest tenth of station-hours contained nearly a quarter of all delays, and predicted rates track the real ones closely.</p>
+    </section>
+
+    <section class="stop">
+      <h2>Honest limits: risk, not prophecy</h2>
+      <p>An AUC near 0.65 is modest, and that is the finding. Most delays are close to random at one station in one hour. <strong>Station</strong> carries nearly all the signal, then hour of day. A simple lookup table gets most of the way, and machine learning adds a small, real gain.</p>
+      <div class="chart">
+        <h3>How weather changes the delay rate</h3>
+        <p class="sub">Delays of 5+ minutes per hour, compared with dry hours between -10 and 25&deg;C.</p>
+        <div class="bars" id="weather"></div>
+        <p class="note">Heavy snow looks dramatic but covers just 52 hours, so treat it as rough. Once station and hour are known, weather adds almost nothing to the model.</p>
+      </div>
+    </section>
+
+    <section class="stop">
+      <h2>Try it yourself</h2>
+      <p>Choose a station, day, hour, month and weather, and the app shows the chance of a 5+ minute delay.</p>
+      <div class="links">
+        <a class="btn solid" href="https://ttc-delay-risk-hidaya.streamlit.app/" target="_blank" rel="noopener">Open the live app</a>
+        <a class="btn" href="project-stock.html">Next: stock prediction</a>
+      </div>
+      <p class="note">Built with Python, pandas, scikit-learn and Streamlit. Contains information licensed under the Open Government Licence – Toronto (<a href="https://open.toronto.ca/dataset/ttc-subway-delay-data/">TTC Subway Delay Data</a>). Weather from <a href="https://open-meteo.com/">Open-Meteo</a>, CC BY 4.0. Not affiliated with the TTC.</p>
+    </section>
+  </main>
+
+  <footer>&copy; 2026 Hidaya Patel</footer>
+
+  <script src="mosaic.js"></script>
+  <script src="case.js"></script>
+  <script>
+    const D = {"heat":[[1.29,1.91,1.33,1.8,1.15,1.19,0.99,1.11,1.06,1.3,1.54,1.48,1.62,1.3,1.11,1.05,0.91,0.96,0.97],[1.21,1.94,1.43,1.75,1.16,1.04,1.05,1.14,1.31,1.21,1.49,2.01,1.87,1.44,1.23,1.31,1.1,1.11,0.91],[1.09,1.87,1.66,1.67,1.23,0.9,1.13,1.02,1.26,1.44,1.54,1.71,1.96,1.43,1.26,1.27,0.99,1.13,0.95],[1.3,1.71,1.39,1.61,1.14,1.18,1.13,1.05,1.19,1.29,1.5,2.01,1.84,1.35,1.17,1.15,1.17,1.26,1.04],[1.18,1.54,1.36,1.37,1.12,0.98,1.1,1.1,1.26,1.45,1.59,1.53,1.8,1.45,1.19,1.15,1.31,1.21,1.24],[0.84,1.35,0.65,0.54,0.79,0.83,0.99,1.08,1.17,1.19,1.11,1.21,1.24,1.11,1.1,1.16,1.17,1.25,1.05],[0.02,0.04,0.38,2.62,0.88,0.97,0.93,0.87,0.97,0.96,0.95,1.06,1.08,1.04,1.1,0.92,0.89,0.9,0.87]],"st":{"BATHURST":[2209,267],"BAY":[2378,283],"BAYVIEW":[1232,163],"BESSARION":[686,94],"BLOOR-YONGE":[12175,1805],"BROADVIEW":[3666,402],"CASTLE FRANK":[2760,284],"CEDARVALE":[3042,375],"CHESTER":[1948,256],"CHRISTIE":[2478,292],"COLLEGE":[3897,545],"COXWELL":[3710,602],"DAVISVILLE":[5743,765],"DON MILLS":[3320,367],"DONLANDS":[3259,476],"DOWNSVIEW PARK":[1733,252],"DUFFERIN":[1811,232],"DUNDAS WEST":[2691,317],"DUPONT":[2320,312],"EGLINTON":[7497,1071],"ELLESMERE":[182,20],"FINCH":[7418,1239],"FINCH WEST":[1866,249],"GLENCAIRN":[1971,276],"GREENWOOD":[3689,521],"HIGH PARK":[1727,232],"HIGHWAY 407":[1951,255],"ISLINGTON":[3228,374],"JANE":[2340,242],"KEELE":[4173,506],"KENNEDY":[9002,1435],"KING":[3460,411],"KIPLING":[8555,1425],"LANSDOWNE":[2097,211],"LAWRENCE":[5033,588],"LAWRENCE EAST":[589,55],"LAWRENCE WEST":[2480,333],"LESLIE":[1219,169],"MAIN STREET":[2656,315],"MCCOWAN":[1547,118],"MIDLAND":[463,31],"MUSEUM":[2584,318],"NORTH YORK CENTRE":[3096,447],"OLD MILL":[2369,241],"OSGOODE":[2153,311],"OSSINGTON":[3316,378],"PAPE":[2579,341],"PIONEER VILLAGE":[1229,175],"QUEEN":[3012,395],"QUEEN'S PARK":[1820,295],"ROSEDALE":[4433,505],"ROYAL YORK":[1954,252],"RUNNYMEDE":[1375,162],"SCARBOROUGH CENTRE":[156,17],"SHEPPARD WEST":[4994,548],"SHEPPARD-YONGE":[7317,886],"SHERBOURNE":[2549,295],"SPADINA":[5707,680],"ST ANDREW":[2512,297],"ST CLAIR":[4507,660],"ST CLAIR WEST":[3618,516],"ST GEORGE":[8730,1197],"ST PATRICK":[2218,259],"SUMMERHILL":[3154,392],"TMU":[4411,622],"UNION":[5813,819],"VAUGHAN METROPOLITAN CENTRE":[4209,787],"VICTORIA PARK":[4579,523],"WARDEN":[5588,613],"WELLESLEY":[3736,516],"WILSON":[6401,986],"WOODBINE":[3002,265],"YORK MILLS":[4412,535],"YORK UNIVERSITY":[1124,151],"YORKDALE":[4076,399]},"cause":[["Passenger & miscellaneous",34.3],["Security",32.6],["Track, signals & power",17.7],["Train equipment",8.2],["Operations & staff",7.3]],"sp":{"KENNEDY":[64,["KENNEDY BD STATION","KENNEDY SRT STATION TO","KENNEDY SRT STATION","KENNEDY STATION","KENNEDY BD STATION - P","KENNEDY BD STATION PLA","KENNEDY SRT TO LAWRENC","KENNEDY BD STATION (PL","KENNEDY BD STATION (AP","KENNEDY BD STATION- PL"]],"VAUGHAN METROPOLITAN CENTRE":[52,["VAUGHAN MC STATION","VMC STATION","VMC STATION (PLATFORM","VMC STATION PLATFORM 2","VMC STATION PLATFORM 1","VMC STATION - PLATFORM","VMC STATION - PLAT 1","VAUGHAN MC STATION PLA","VMC STATION PLATFORM #","VMC STATION - PLAT 2"]],"BLOOR-YONGE":[45,["BLOOR STATION","YONGE BD STATION","YONGE STATION","BLOOR STATION (ENTERIN","BLOOR STATION (APPROAC","BLOOR - DANFORTH SUBWA","YONGE BD TO PAPE STATI","BLOOR HUB","BLOOR-YONGE STATION","YONGE BD - SPADINA"]],"TMU":[23,["DUNDAS STATION","TMU STATION","DUNDAS STATION (APPROA","DUNDAS STATION E/S","DUNDAS STATION W/S","DUNDAS STATION TO EGLI","TMU STATION (APPROACHI","DUNDAS STATION EAST SI","DUNDAS","TMU STATION W/S"]]},"dec":[[0.32,0.33],[0.44,0.43],[0.59,0.5],[0.63,0.57],[0.73,0.66],[0.83,0.79],[0.87,0.96],[1.04,1.16],[1.23,1.41],[2.09,2.24]]};
+    const $ = (id) => document.getElementById(id);
+    const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const hour = (h) => h === 0 ? '12am' : h < 12 ? h + 'am' : h === 12 ? '12pm' : (h - 12) + 'pm';
+    const nice = (s) => s.toLowerCase().replace(/(^|[\s-])\w/g, (m) => m.toUpperCase()).replace('Tmu', 'TMU');
+    const fmt = (n) => n.toLocaleString('en-CA');
+    function table(head, rows) {
+      const t = el('table'), tr = el('tr');
+      head.forEach((h, i) => tr.append(el('th', i ? { class: 'num' } : {}, h)));
+      t.append(tr);
+      rows.forEach((r) => { const x = el('tr'); r.forEach((c, i) => x.append(el('td', i ? { class: 'num' } : {}, c))); t.append(x); });
+      return t;
+    }
+
+    // Heatmap
+    const stops = [[247, 220, 217], [234, 141, 134], [217, 30, 24], [94, 10, 7]], MAX = 2.62;
+    const colour = (v) => {
+      const p = Math.min(1, v / MAX) * 3, i = Math.min(2, Math.floor(p)), f = p - i;
+      return `rgb(${stops[i].map((c, k) => Math.round(c + (stops[i + 1][k] - c) * f)).join(',')})`;
+    };
+    D.heat.forEach((row, d) => {
+      $('heat').append(el('span', {}, DAYS[d]));
+      row.forEach((v, i) => {
+        const c = el('div', { class: 'cell', style: `background:${colour(v)}` });
+        hint(c, v.toFixed(2) + ' delays', `${DAYS[d]} ${hour(i + 5)}`);
+        $('heat').append(c);
+      });
+    });
+    $('heat').append(el('span'));
+    for (let h = 5; h < 24; h++) $('heat').append(el('span', { class: 'hr' }, h % 2 ? String(h) : ''));
+    $('heatTable').append(table(['Hour', ...DAYS], D.heat[0].map((_, i) => [hour(i + 5), ...D.heat.map((r) => r[i].toFixed(2))])));
+
+    // Map
+    const west = ['VAUGHAN METROPOLITAN CENTRE', 'HIGHWAY 407', 'PIONEER VILLAGE', 'YORK UNIVERSITY', 'FINCH WEST', 'DOWNSVIEW PARK', 'SHEPPARD WEST', 'WILSON', 'YORKDALE', 'LAWRENCE WEST', 'GLENCAIRN', 'CEDARVALE', 'ST CLAIR WEST', 'DUPONT'];
+    const two = ['KIPLING', 'ISLINGTON', 'ROYAL YORK', 'OLD MILL', 'JANE', 'RUNNYMEDE', 'HIGH PARK', 'KEELE', 'DUNDAS WEST', 'LANSDOWNE', 'DUFFERIN', 'OSSINGTON', 'CHRISTIE', 'BATHURST', 'SPADINA', 'ST GEORGE', 'BAY', 'BLOOR-YONGE', 'SHERBOURNE', 'CASTLE FRANK', 'BROADVIEW', 'CHESTER', 'PAPE', 'DONLANDS', 'GREENWOOD', 'COXWELL', 'WOODBINE', 'MAIN STREET', 'VICTORIA PARK', 'WARDEN', 'KENNEDY'];
+    const down = ['MUSEUM', "QUEEN'S PARK", 'ST PATRICK', 'OSGOODE', 'ST ANDREW'];
+    const up = ['KING', 'QUEEN', 'TMU', 'COLLEGE', 'WELLESLEY'];
+    const north = ['ROSEDALE', 'SUMMERHILL', 'ST CLAIR', 'DAVISVILLE', 'EGLINTON', 'LAWRENCE', 'YORK MILLS', 'SHEPPARD-YONGE', 'NORTH YORK CENTRE', 'FINCH'];
+    const four = ['BAYVIEW', 'BESSARION', 'LESLIE', 'DON MILLS'];
+    const P = {};
+    two.forEach((s, i) => P[s] = [25 + i * 31.67, 350]);
+    const sx = P['SPADINA'][0], gx = P['ST GEORGE'][0], bx = P['BLOOR-YONGE'][0];
+    west.forEach((s, i) => P[s] = [sx - (14 - i) * 15, 350 - (14 - i) * 23.5]);
+    down.forEach((s, i) => P[s] = [gx, 382 + i * 27]);
+    P['UNION'] = [(gx + bx) / 2, 528];
+    up.forEach((s, i) => P[s] = [bx, 490 - i * 27]);
+    north.forEach((s, i) => P[s] = [bx, 316 - i * 32.5]);
+    four.forEach((s, i) => P[s] = [bx + 42 * (i + 1), P['SHEPPARD-YONGE'][1]]);
+    const path = (a) => 'M' + a.map((s) => P[s].join(' ')).join('L');
+    const map = $('map');
+    [[...west, 'SPADINA', 'ST GEORGE', ...down, 'UNION', ...up, 'BLOOR-YONGE', ...north], two, ['SHEPPARD-YONGE', ...four]]
+      .forEach((a) => map.append(sv('path', { d: path(a), fill: 'none', stroke: '#c4c4c0', 'stroke-width': 5, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' })));
+    Object.entries(P).sort((a, b) => D.st[b[0]][0] - D.st[a[0]][0]).forEach(([s, [x, y]]) => {
+      const [m, n] = D.st[s], r = Math.sqrt(m / 12175) * 17;
+      const c = sv('circle', { cx: x, cy: y, r, fill: '#d91e18', stroke: '#ffffff', 'stroke-width': 2 });
+      hint(c, fmt(m) + ' min', `${nice(s)}, ${fmt(n)} delays`);
+      map.append(c);
+    });
+    const lab = (x, y, t, a, strong) => map.append(sv('text', { x, y, 'text-anchor': a, class: strong ? 'strong' : '', style: 'font-size:15px' }, t));
+    lab(bx + 24, 385, 'Bloor-Yonge 12,175', 'start', 1);
+    lab(1000, 322, 'Kennedy 9,002', 'end', 1);
+    lab(gx - 14, 392, 'St George 8,730', 'end', 1);
+    lab(4, 322, 'Kipling 8,555', 'start', 1);
+    lab(sx - 232, 30, 'Line 1', 'end'); lab(150, 388, 'Line 2', 'middle'); lab(P['DON MILLS'][0] + 18, P['DON MILLS'][1] + 5, 'Line 4', 'start');
+    $('mapTable').append(table(['Station', 'Minutes', 'Delays'], Object.entries(D.st).sort((a, b) => b[1][0] - a[1][0]).map(([s, v]) => [nice(s), fmt(v[0]), fmt(v[1])])));
+
+    // Horizontal bars
+    function bars(id, rows, max, show) {
+      rows.forEach(([k, v, extra]) => {
+        const t = el('div', { class: 'track' }), b = el('div', { class: 'bar', style: `width:${Math.max(0, v) / max * 72}%` });
+        hint(b, show(v), k + (extra ? ', ' + extra : ''));
+        t.append(b, el('span', { class: 'val' }, show(v)));
+        $(id).append(el('span', {}, k), t);
+      });
+    }
+    bars('causes', D.cause, 34.3, (v) => Math.round(v) + '%');
+    bars('auc', [['Always the average', 0], ['Historical lookup', .1224], ['Logistic regression', .1443], ['Gradient boosting', .1449]], .1449, (v) => (v + .5).toFixed(3));
+    bars('weather', [['Rain or snow falling', 5, '4,077 hours'], ['Deep cold, below -10°C', 35, '630 hours'], ['Heavy snow, 1 cm+ an hour', 65, '52 hours']], 65, (v) => '+' + v + '%');
+
+    // Deciles
+    columns($('deciles'), D.dec.map((d) => d[0]), {
+      label: (i) => `Risk group ${i + 1} of 10`, max: 2.2, ticks: [0, 1, 2], tickText: (t) => t + '%',
+      xText: (i) => String(i + 1), tipText: (v) => v.toFixed(1) + '%',
+    });
+    $('decTable').append(table(['Group', 'Real', 'Predicted'], D.dec.map((d, i) => [String(i + 1), d[0].toFixed(2) + '%', d[1].toFixed(2) + '%'])));
+
+    // Messy names
+    function pick(s) {
+      [...$('picker').children].forEach((b) => b.setAttribute('aria-pressed', b.dataset.s === s));
+      $('messy').replaceChildren(...D.sp[s][1].map((t) => el('span', {}, t)));
+      $('clean').replaceChildren(document.createTextNode(nice(s)), el('small', {}, D.sp[s][0] + ' raw spellings in total'));
+    }
+    Object.keys(D.sp).forEach((s) => {
+      const b = el('button', { type: 'button', 'data-s': s }, nice(s));
+      b.addEventListener('click', () => pick(s));
+      $('picker').append(b);
+    });
+    pick('KENNEDY');
+  </script>
+</body>
+</html>
