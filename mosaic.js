@@ -157,6 +157,9 @@ const Mosaic = (() => {
     let small = canvas.clientWidth < 620, name = first, scene = scenes[first](small);
     let from = scene.t, now = scene.t.map((a) => a.slice());
     let start = 0, done = true, raf = 0, k = 1, ox = 0, oy = 0, dpr = 1, hot = -1;
+    // Bubble state for each tile: offset x, y and their speeds, then swell and its speed.
+    const bub = Array.from({ length: N }, () => [0, 0, 0, 0, 1, 0]);
+    let px = -999, py = -999, waves = [], bubRaf = 0, last = 0;
 
     function size() {
       const r = canvas.getBoundingClientRect();
@@ -188,14 +191,20 @@ const Mosaic = (() => {
         ctx.strokeStyle = col; ctx.lineWidth = lw;
         ctx.beginPath(); ctx.moveTo(a, b); ctx.lineTo(c, d); ctx.stroke();
       }
-      now.forEach(([x, y, s, c, f], i) => {
+      const draw = (i) => {
+        let [x, y, s, c, f] = now[i];
+        const [bx, by, , , z] = bub[i];
+        x += bx - s * (z - 1) / 2; y += by - s * (z - 1) / 2; s *= z;
+        if (s <= 0) return;
         const lw = Math.max(1, Math.min(2.4, s * .12));
         if (s > 9) { ctx.fillStyle = '#f7f7f5'; ctx.fillRect(x, y, s, s); }
         ctx.strokeStyle = c; ctx.fillStyle = c;
         ctx.lineWidth = done && i === hot ? lw + 2.5 : lw;
         ctx.strokeRect(x + lw / 2, y + lw / 2, s - lw, s - lw);
         if (f > .01) { const q = (s - lw) * Math.sqrt(f); ctx.fillRect(x + (s - q) / 2, y + (s - q) / 2, q, q); }
-      });
+      };
+      for (let i = 0; i < N; i++) if (i !== hot) draw(i);
+      if (hot >= 0) draw(hot);
       if (done) {
         ctx.fillStyle = INK;
         ctx.font = `600 ${scene.w === 920 ? Math.max(22, 13 / k) : Math.max(15, 13 / k)}px Archivo, sans-serif`;
@@ -207,12 +216,51 @@ const Mosaic = (() => {
       for (let i = 0; i < N; i++) {
         const a = from[i], b = scene.t[i];
         const d = Math.min(1, Math.max(0, p * 1.7 - (i % 100) / 143));
-        const e = d < .5 ? 4 * d * d * d : 1 - Math.pow(-2 * d + 2, 3) / 2, mix = (j) => a[j] + (b[j] - a[j]) * e;
-        now[i] = [mix(0), mix(1), mix(2), e > .5 ? b[3] : a[3], mix(4), b[5]];
+        const q = d - 1, e = 1 + 2.5 * q * q * q + 1.5 * q * q, mix = (j) => a[j] + (b[j] - a[j]) * e; // lands with a small bounce
+        now[i] = [mix(0), mix(1), Math.max(0, mix(2)), e > .5 ? b[3] : a[3], Math.max(0, Math.min(1, mix(4))), b[5]];
       }
       done = p >= 1;
       paint();
       if (!done) raf = requestAnimationFrame(step);
+    }
+    // Tiles push away from the pointer, spring back with a wobble, swell when hovered,
+    // and ripple outwards from a click or tap. Runs only while something is moving.
+    function bubble(ts) {
+      const dt = Math.min(2, (ts - last) / 16.7 || 1), playful = name === 'name' || name === 'home', reach = playful ? 105 : 75, push = playful ? 34 : 10;
+      last = ts;
+      let moving = false;
+      waves = waves.filter((w) => ts - w.t < 1100);
+      for (let i = 0; i < N; i++) {
+        const t = now[i], b = bub[i], cx = t[0] + t[2] / 2, cy = t[1] + t[2] / 2;
+        let tx = 0, ty = 0, tz = 1;
+        const dx = cx - px, dy = cy - py, d = Math.hypot(dx, dy) || 1;
+        if (i === hot) tz = 1.45;
+        else if (d < reach) {
+          const f = (1 - d / reach) ** 1.3;
+          tx = dx / d * push * f; ty = dy / d * push * f;
+          if (playful) tz = 1 + .45 * f;
+        }
+        for (const w of waves) {
+          const wx = cx - w.x, wy = cy - w.y, wd = Math.hypot(wx, wy) || 1, edge = (ts - w.t) * .75, gap = Math.abs(wd - edge);
+          if (gap < 46) {
+            const f = (1 - gap / 46) * Math.max(0, 1 - (ts - w.t) / 1100);
+            tx += wx / wd * 26 * f; ty += wy / wd * 26 * f; tz += .55 * f;
+          }
+        }
+        b[2] = (b[2] + (tx - b[0]) * .16 * dt) * Math.pow(.8, dt);
+        b[3] = (b[3] + (ty - b[1]) * .16 * dt) * Math.pow(.8, dt);
+        b[5] = (b[5] + (tz - b[4]) * .18 * dt) * Math.pow(.78, dt);
+        b[0] += b[2] * dt; b[1] += b[3] * dt; b[4] = Math.max(.2, b[4] + b[5] * dt);
+        if (Math.abs(b[2]) + Math.abs(b[3]) + Math.abs(b[5]) * 20 + Math.abs(tx - b[0]) + Math.abs(ty - b[1]) + Math.abs(tz - b[4]) * 10 > .05) moving = true;
+        else { b[0] = tx; b[1] = ty; b[4] = tz; b[2] = b[3] = b[5] = 0; }
+      }
+      if (done) paint();
+      bubRaf = moving || waves.length ? requestAnimationFrame(bubble) : 0;
+    }
+    function wake() {
+      if (still || bubRaf) return;
+      last = performance.now();
+      bubRaf = requestAnimationFrame(bubble);
     }
     function go(next) {
       if (next === name) return;
@@ -227,18 +275,28 @@ const Mosaic = (() => {
       start = performance.now();
       raf = requestAnimationFrame(step);
     }
-    if (onHint) {
-      const find = (e) => {
-        const r = canvas.getBoundingClientRect(), x = (e.clientX - r.left - ox) / k, y = (e.clientY - r.top - oy) / k;
+    function track(e) {
+      const r = canvas.getBoundingClientRect();
+      px = (e.clientX - r.left - ox) / k; py = (e.clientY - r.top - oy) / k;
+      if (onHint) {
         let best = -1, near = 26;
-        if (done) scene.t.forEach(([a, b, s, , , h], i) => { const d = Math.hypot(a + s / 2 - x, b + s / 2 - y); if (h && d < near) { near = d; best = i; } });
-        if (best !== hot) { hot = best; paint(); }
+        if (done) scene.t.forEach(([a, b, s, , , x], i) => { const d = Math.hypot(a + s / 2 - px, b + s / 2 - py); if (x && d < near) { near = d; best = i; } });
+        if (best !== hot) { hot = best; if (done) paint(); }
         onHint(best < 0 ? '' : scene.t[best][5]);
-      };
-      canvas.addEventListener('pointermove', find);
-      canvas.addEventListener('pointerdown', find);
-      canvas.addEventListener('pointerleave', () => { hot = -1; paint(); onHint(''); });
+      }
+      wake();
     }
+    function leave() { px = py = -999; hot = -1; if (done) paint(); if (onHint) onHint(''); wake(); }
+    canvas.addEventListener('pointermove', track);
+    canvas.addEventListener('pointerdown', (e) => {
+      track(e);
+      if (!still) waves.push({ x: px, y: py, t: performance.now() });
+      wake();
+    });
+    // On touch, keep the tapped tile's value showing but let the crowd settle.
+    canvas.addEventListener('pointerup', (e) => { if (e.pointerType !== 'mouse') { px = py = -999; wake(); } });
+    canvas.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') leave(); else { px = py = -999; wake(); } });
+    canvas.addEventListener('pointercancel', leave);
     new ResizeObserver(size).observe(canvas);
     document.fonts?.ready.then(paint);
     size();

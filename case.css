@@ -116,3 +116,30 @@ footer { text-align: center; color: var(--muted); font-size: .84rem; padding: 28
 .cubes i { width: 14px; height: 14px; background: var(--red); }
 .eq { font-size: clamp(1rem, 2.4vw, 1.35rem); font-weight: 700; line-height: 1.6; }
 @media (max-width: 760px) { .sliders { grid-template-columns: minmax(0, 1fr); gap: 16px; } }
+
+/* Centred layout */
+.hero, .stop { text-align: center; }
+.lede, .stop > p, .note { margin-left: auto; margin-right: auto; }
+.stop > p, .note { text-wrap: pretty; }
+.hero .links, .stop .links, .legend, .picker, .ramp { justify-content: center; }
+.chart { text-align: left; }
+.chart h3, .chart > .sub, .chart > .note, .chart > div > .sub { text-align: center; }
+.chart details { text-align: center; }
+.chart details > div { text-align: left; }
+.eq { text-align: center; }
+/* The subway line runs down the middle, one station above each heading. */
+.line::before { display: none; }
+.stop { padding: 92px 0 48px; }
+.stop::before { left: 50%; top: 44px; transform: translateX(-50%); z-index: 1; }
+.stop::after { content: ''; position: absolute; left: 50%; top: 0; width: 6px; height: 46px; margin-left: -3px; background: var(--ink); }
+.plain .stop { padding: 28px 0 44px; }
+.plain .stop::after { display: none; }
+@media (max-width: 760px) {
+  .stop { padding: 76px 0 36px; }
+  .stop::before { left: 50%; top: 38px; }
+  .stop::after { width: 4px; margin-left: -2px; height: 40px; }
+  .plain .stop { padding: 20px 0 32px; }
+  .merge { justify-items: center; text-align: center; }
+  .merge .to { justify-self: center; }
+  .messy { justify-content: center; }
+}
