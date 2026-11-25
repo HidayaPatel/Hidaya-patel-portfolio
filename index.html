@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hidaya Patel — Data Scientist</title>
-  <meta name="description" content="Data science projects by Hidaya Patel, told by one crowd of 360 tiles that rebuilds itself into every result.">
+  <meta name="description" content="Data science projects by Hidaya Patel, answered by one crowd of 360 tiles that rebuilds itself into every graph.">
   <meta property="og:title" content="Hidaya Patel — Data Scientist">
   <meta property="og:description" content="Four data projects, told by one crowd of tiles.">
   <meta property="og:type" content="website">
@@ -14,108 +14,121 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="ink.css">
   <style>
-    @media (min-width: 861px) { nav { padding: 0 48px 0 64px; } }
-    .stage { position: fixed; top: 64px; right: 0; width: 60vw; height: calc(100vh - 64px); padding: 24px 40px 40px 0; }
-    .stage canvas { width: 100%; height: 100%; display: block; }
-    .scene { min-height: 100vh; width: 40vw; padding: 110px 16px 64px 64px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
-    .scene h1, .scene h2 { font-size: clamp(2rem, 3.6vw, 3.7rem); font-weight: 800; font-stretch: 112%; line-height: 1.02; letter-spacing: -.02em; text-wrap: balance; margin-bottom: 20px; }
-    .scene p { font-size: 1.06rem; line-height: 1.65; max-width: 40ch; margin-bottom: 16px; }
-    .unit { color: var(--muted); font-size: .9rem !important; }
-    .unit::before { content: ''; display: inline-block; width: 11px; height: 11px; background: var(--ink); margin-right: 9px; }
-    .rail { position: fixed; left: 18px; top: 50%; transform: translateY(-50%); display: grid; gap: 2px; z-index: 20; }
-    .rail a { width: 24px; height: 24px; display: grid; place-items: center; }
-    .rail a::before { content: ''; width: 10px; height: 10px; background: #b9b9b4; }
-    .rail a[aria-current]::before { background: var(--red); }
+    main { max-width: 1040px; margin: 0 auto; padding: 92px 24px 40px; text-align: center; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+    h1 { font-size: clamp(2rem, 5vw, 3.6rem); font-weight: 800; font-stretch: 112%; line-height: 1.04; letter-spacing: -.025em; text-wrap: balance; outline: none; min-height: 1.04em; }
+    main:not(.asking) h1 { font-size: clamp(1.7rem, 3.5vw, 2.6rem); }
+    main:not(.asking) #crowd { height: clamp(260px, 47vh, 480px); margin-top: 14px; }
+    .lead { font-size: 1.08rem; line-height: 1.6; margin-top: 12px; max-width: 56ch; }
+    #crowd { width: 100%; height: clamp(260px, 50vh, 500px); display: block; margin: 18px 0 6px; touch-action: pan-y; }
+    #key { min-height: 1.5em; color: var(--muted); font-size: .95rem; }
+    #reply { max-width: 60ch; }
+    #reply p { font-size: 1.16rem; line-height: 1.55; margin: 8px 0 14px; text-wrap: pretty; }
+    .ask { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 22px; max-width: 900px; }
+    .ask button { font: inherit; font-weight: 600; font-size: 1rem; color: var(--ink); background: none; border: 2px solid var(--ink); padding: 13px 18px; min-height: 48px; cursor: pointer; transition: background .15s, color .15s; }
+    .ask button:hover { background: var(--ink); color: #fff; }
+    .ask button[hidden] { display: none; }
+    #contact { border-top: 2px solid var(--ink); max-width: 1040px; margin: 24px auto 0; padding: 40px 24px 64px; text-align: center; scroll-margin-top: 72px; }
+    #contact h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 800; font-stretch: 112%; letter-spacing: -.02em; margin-bottom: 8px; }
+    #contact .links { justify-content: center; }
+    noscript p { margin-top: 20px; }
     @media (max-width: 860px) {
-      .stage { top: 56px; left: 0; width: 100%; height: 44vh; height: 44svh; padding: 8px 16px; background: var(--paper); border-bottom: 2px solid var(--ink); z-index: 10; }
-      .scene { width: 100%; min-height: 100vh; min-height: 100svh; padding: calc(44svh + 84px) 20px 40px; justify-content: flex-start; }
-      .scene h1, .scene h2 { font-size: 1.9rem; margin-bottom: 14px; }
-      .scene p { font-size: 1rem; margin-bottom: 12px; }
-      .rail { display: none; }
-    }
-    @media (max-width: 860px) and (max-height: 620px) {
-      .stage { height: 34svh; }
-      .scene { padding-top: calc(34svh + 76px); }
+      main { padding: 76px 16px 32px; }
+      h1 { font-size: 1.9rem; }
+      .lead { font-size: 1rem; }
+      main:not(.asking) #crowd { height: min(102vw, 440px); margin: 12px 0 4px; }
+      .asking #crowd { height: min(46vw, 260px); margin: 16px 0 4px; }
+      #reply p { font-size: 1.05rem; }
+      .ask { flex-direction: column; width: 100%; gap: 8px; }
     }
   </style>
 </head>
 <body>
-  <a class="skip" href="#ttc">Skip to projects</a>
+  <a class="skip" href="#ask">Skip to questions</a>
   <nav>
     <a href="index.html" class="me">Hidaya Patel</a>
     <div><a href="projects.html">30-second version</a><a href="#contact">Contact</a></div>
   </nav>
 
-  <div class="rail" aria-hidden="true">
-    <a href="#home" tabindex="-1"></a><a href="#ttc" tabindex="-1"></a><a href="#stock" tabindex="-1"></a><a href="#covid" tabindex="-1"></a><a href="#sugar" tabindex="-1"></a><a href="#contact" tabindex="-1"></a>
-  </div>
-
-  <div class="stage"><canvas id="crowd" role="img" aria-label="360 tiles spelling Hidaya"></canvas></div>
-
-  <main>
-    <section class="scene" id="home" data-alt="360 tiles spelling Hidaya">
-      <h1>Every project starts as a crowd of data.</h1>
-      <p>I'm Hidaya Patel, a data scientist. Scroll, and these same 360 tiles rebuild themselves into each result.</p>
-      <div class="links"><a class="btn solid" href="#ttc">See the projects</a><a class="btn" href="projects.html">30-second version</a></div>
-    </section>
-
-    <section class="scene" id="ttc" data-alt="Ten columns of tiles. The riskiest hours column holds 24% of delays.">
-      <h2>Can you predict a subway delay?</h2>
-      <p>From 97,227 TTC incidents, my model ranked station-hours by risk. The riskiest tenth held nearly a quarter of all 2026 delays, a year it had never seen.</p>
-      <p class="unit">1 tile = 1/360 of 2026 delays</p>
-      <div class="links"><a class="btn solid" href="project-ttc.html">Read the TTC study</a></div>
-    </section>
-
-    <section class="scene" id="stock" data-alt="Four groups of tiles for test days: said up and right 196, said up and wrong 170, said down and right 77, said down and wrong 98.">
-      <h2>Can technical signals beat the market?</h2>
-      <p>No. The red tiles are days the model got wrong, nearly half of them. Always guessing "up" scored higher.</p>
-      <p class="unit">1 tile = about 1.5 test days</p>
-      <div class="links"><a class="btn solid" href="project-stock.html">Read the stock study</a></div>
-    </section>
-
-    <section class="scene" id="covid" data-alt="34 Ontario cities in three groups: Toronto alone, 13 cities, and 20 cities.">
-      <h2>Which cities needed help first?</h2>
-      <p>K-means sorted 34 Ontario cities by COVID-19 outcomes. Toronto was so far ahead it became a group of one, hiding the next hot spots.</p>
-      <p class="unit">10 tiles = 1 city</p>
-      <div class="links"><a class="btn solid" href="project-kmeans.html">Read the COVID-19 study</a></div>
-    </section>
-
-    <section class="scene" id="sugar" data-alt="360 tiles, 344 black for explained variation and 16 red for unexplained.">
-      <h2>What drives the sugar in your Starbucks?</h2>
-      <p>Calories, fat and fibre explain 95.5% of the difference in sugar between 238 drinks. The red tiles are what's left.</p>
-      <p class="unit">1 tile = 1/360 of the variation</p>
-      <div class="links"><a class="btn solid" href="project-regression.html">Read the Starbucks study</a></div>
-    </section>
-
-    <section class="scene" id="contact" data-alt="Three bands of tiles for email, LinkedIn and GitHub">
-      <h2>Have data that needs a story?</h2>
-      <p>Tell me what you're trying to find out.</p>
-      <div class="links">
-        <a class="btn solid" href="mailto:hidaya.ayub.jobs@gmail.com">Email me</a>
-        <a class="btn" href="https://www.linkedin.com/in/hidayapatel" target="_blank" rel="noopener">LinkedIn</a>
-        <a class="btn" href="https://github.com/HidayaPatel" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </section>
+  <main id="main" class="asking">
+    <h1 id="title" tabindex="-1">Ask my data something.</h1>
+    <p class="lead" id="lead">I'm Hidaya Patel, a data scientist. Pick a question, and 360 tiles will line up to answer it.</p>
+    <canvas id="crowd" role="img" aria-label="360 tiles spelling Hidaya"></canvas>
+    <p id="key"></p>
+    <div id="reply" hidden><p id="answer"></p><a class="btn solid" id="study" href="projects.html">Read the full study</a></div>
+    <div class="ask" id="ask" role="group" aria-label="Questions you can ask"></div>
+    <noscript><p><a href="projects.html">See all four projects</a></p></noscript>
   </main>
+
+  <section id="contact">
+    <h2>Have data that needs a story?</h2>
+    <p>Tell me what you're trying to find out.</p>
+    <div class="links">
+      <a class="btn solid" href="mailto:hidaya.ayub.jobs@gmail.com">Email me</a>
+      <a class="btn" href="https://www.linkedin.com/in/hidayapatel" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn" href="https://github.com/HidayaPatel" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </section>
 
   <script src="mosaic.js"></script>
   <script>
-    const canvas = document.getElementById('crowd');
-    const crowd = Mosaic.mount(canvas, 'home');
-    const scenes = [...document.querySelectorAll('.scene')], rail = [...document.querySelectorAll('.rail a')];
-    let active = '';
-    function update() {
-      const mid = innerHeight * .55;
-      const s = scenes.findLast((x) => x.getBoundingClientRect().top <= mid) || scenes[0];
-      if (s.id === active) return;
-      active = s.id;
-      crowd.go(s.id);
-      canvas.setAttribute('aria-label', s.dataset.alt);
-      rail.forEach((a) => a.hash === '#' + s.id ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current'));
+    const QUESTIONS = {
+      ttc: {
+        q: 'When is the subway most likely to be late?', scene: 'heatmap', page: 'project-ttc.html',
+        a: 'When service opens and again from 4 to 6pm. The fullest tile is Sunday at 8am, opening time. From 97,227 incidents I built a model that ranks the risk for every station and hour.',
+        key: 'Fuller tile, more delays per hour. Red is 1.8 or more.',
+        alt: 'Heatmap of average delays by day and hour. Highest: Sunday 8am at 2.62, Tuesday and Thursday 4pm at 2.01.',
+      },
+      stock: {
+        q: 'Can technical signals beat the market?', scene: 'dumbbell', page: 'project-stock.html',
+        a: 'No. Each model looked better in training than on new days, and none beat always guessing "up". The more complex the model, the harder it fell.',
+        key: 'Outline is training accuracy, red is new data. Each small tile is about one point lost.',
+        alt: 'Dumbbell chart. Logistic regression 53.8% in training, 50.5% on new data. Random forest 66.7% to 47.9%. XGBoost 72.0% to 47.7%. Always guessing up scores 54.3%.',
+      },
+      covid: {
+        q: 'Which cities needed help first?', scene: 'matrix', page: 'project-kmeans.html',
+        a: 'Toronto, then Mississauga and Newmarket. I grouped 34 Ontario cities five different ways. In K-means, those two only split from the rest once Toronto was removed.',
+        key: 'Solid red is the highest-count group. Emptier tiles are lower groups.',
+        small: ' A: K-means. B: K-means, no Toronto. C: four groups, no Toronto. D: hierarchical. E: hierarchical, no Toronto.',
+        alt: 'Matrix of city groups across five clustering runs. Toronto is always in its own group. Mississauga joins the top group in all three runs without Toronto, Newmarket in two.',
+      },
+      sugar: {
+        q: 'What drives the sugar in a Starbucks drink?', scene: 'lines', page: 'project-regression.html',
+        a: 'Mostly calories. At the same calories, a fattier drink has less room for sugar. With fibre, these explain 95.5% of the difference between 238 drinks.',
+        key: 'Model estimates for drinks with no fibre.',
+        alt: 'Three model lines of sugar against calories for 0, 5 and 10 grams of fat. Each 5 grams of fat lowers estimated sugar by about 13 grams.',
+      },
+    };
+    const $ = (id) => document.getElementById(id);
+    let current = null;
+    const crowd = Mosaic.mount($('crowd'), 'name', (hint) => { $('key').textContent = hint || keyFor(); });
+    function keyFor() { const x = QUESTIONS[current]; return x ? x.key + (x.small && $('crowd').clientWidth < 620 ? x.small : '') : ''; }
+    const buttons = Object.entries(QUESTIONS).map(([id, x]) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = x.q;
+      b.addEventListener('click', () => { history.pushState(null, '', '#' + id); show(id, true); });
+      b.dataset.id = id;
+      $('ask').append(b);
+      return b;
+    });
+    function show(id, move) {
+      const x = QUESTIONS[id];
+      current = x ? id : null;
+      $('title').textContent = x ? x.q : 'Ask my data something.';
+      $('lead').hidden = !!x;
+      $('main').classList.toggle('asking', !x);
+      $('reply').hidden = !x;
+      $('key').textContent = keyFor();
+      buttons.forEach((b) => { b.hidden = b.dataset.id === id; });
+      $('crowd').setAttribute('aria-label', x ? x.alt : '360 tiles spelling Hidaya');
+      if (x) { $('answer').textContent = x.a; $('study').href = x.page; }
+      crowd.go(x ? x.scene : 'name');
+      if (move) { $('title').focus({ preventScroll: true }); scrollTo({ top: 0 }); }
     }
-    addEventListener('scroll', update, { passive: true });
-    addEventListener('resize', update);
-    update();
+    function fromHash() { const id = location.hash.slice(1); if (id !== 'contact' && id !== 'ask') show(QUESTIONS[id] ? id : null, false); }
+    addEventListener('popstate', fromHash);
+    addEventListener('hashchange', fromHash);
+    fromHash();
   </script>
 </body>
 </html>
